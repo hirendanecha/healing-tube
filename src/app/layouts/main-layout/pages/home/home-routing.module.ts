@@ -129,7 +129,7 @@ const routes: Routes = [
           },
           {
             name: 'og:description',
-            content: 'Freedom Buzz local News Feed Posts',
+            content: 'Healing Tube local News Feed Posts',
           },
           {
             name: 'og:url',

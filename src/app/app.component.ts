@@ -10,7 +10,7 @@ import { Meta } from '@angular/platform-browser';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'freedom-ssr';
+  title = 'healing-tube';
   showButton = false;
 
   constructor(

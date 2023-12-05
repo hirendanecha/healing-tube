@@ -23,7 +23,7 @@ import { MetafrenzyModule, MetafrenzyService } from 'ngx-metafrenzy';
     AppRoutingModule,
     HttpClientModule,
     SharedModule,
-    BrowserModule.withServerTransition({ appId: 'Freedom-buzz' }),
+    BrowserModule.withServerTransition({ appId: 'Healing-tube' }),
     BrowserAnimationsModule,
     MetafrenzyModule.forRoot(),
     TransferHttpCacheModule,

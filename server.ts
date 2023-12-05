@@ -84,14 +84,14 @@ export function app(): express.Express {
         }
         const params = req.params[0];
         var seo: any = {
-          title: 'Freedom Buzz',
+          title: 'Healing Tube',
           description:
             'The Umbrella platform for All freedom based projects worldwide',
           image:
             'https://freedom.buzz/assets/images/banner/freedom-buzz-high-res.jpeg',
           site: 'https://freedom.buzz/',
           url: 'https://freedom.buzz' + params,
-          keywords: 'FreedomBuzz, Freedom',
+          keywords: 'HealingTube',
         };
         if (
           params.indexOf('communities/') > -1 ||
