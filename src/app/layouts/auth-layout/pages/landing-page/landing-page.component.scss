@@ -7,17 +7,30 @@
     font-size: min(max(16px, 1vw), 22px);
   }
   .c-fonts {
-    font-size: min(max(25px, 2vw), 44px);
-
+    // font-size: min(max(25px, 2vw), 44px);
+    font-size: 22px;
+    
     @media (max-width: 999px) {
-      padding: 0 5px;
-      line-height: 33px;
+      font-size: 16px;
     }
   }
 
   .custom-height {
-    height: calc(100vh - 300px);
+    background-image: url(/assets/images/landingpage/healing-hm-pg.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    object-fit: cover;
+    height: calc(100vh - 48px);
     min-height: 400px;
+
+    .banner-text {
+      max-width: 600px;
+      width: 100%;
+      background-color: #0b0d0ed4;
+      border-radius: 5px;
+      padding: 40px;
+      height: 300px;
+    }
 
     @media (max-width: 600px) {
       min-height: 300px;
@@ -281,7 +294,7 @@
     }
   }
 }
-::ng-deep.c-button-landing{
+::ng-deep.c-button-landing {
   svg path {
     fill: #000428;
   }
