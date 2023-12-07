@@ -9,7 +9,7 @@
         loading="lazy"
         class="avatar-img cover-img w-100 h-160-px"
         data-src="{{ community?.coverImg }}"
-        onerror="this.onerror=null;this.src='/assets/images/banner/freedom-buzz-high-res.jpeg;'"
+        onerror="this.onerror=null;this.src='/assets/images/banner/Healing-Tube-Logo.png'"
         alt="avatar"
       />
     </div>
@@ -38,7 +38,7 @@
         <ng-container *ngIf="['my', 'joined'].includes(type)">
           <button
             class="btn btn-outline-danger alt third w-80-px"
-            (click)="deleteOrLeaveCommunity($event)"
+            (click)="deleteOrLeaveCommunity($event, 'my')"
           >
             {{ type === "my" ? "Delete" : "Leave" }}
           </button>

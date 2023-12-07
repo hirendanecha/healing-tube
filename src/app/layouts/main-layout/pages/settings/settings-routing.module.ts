@@ -35,7 +35,7 @@ const routes: Routes = [
             content: window.location.href
           }, {
             name: 'og:image',
-            content: 'https://dev.freedom.buzz/assets/images/freedom-profile.jpg'
+            content: 'https://healing.tube/assets/images/healing-profile.png'
           }
         ],
         links: [

@@ -73,7 +73,7 @@ export class PostDetailComponent implements OnInit {
               description: html.textContent,
               url: data.url,
               image: data.image,
-              site_name: 'Freedom.Buzz'
+              site_name: 'healing.tube'
             });
             // this.seoService.updateSeoMetaData(data, true);
           }

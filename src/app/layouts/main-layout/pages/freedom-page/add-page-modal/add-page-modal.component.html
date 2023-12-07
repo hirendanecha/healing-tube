@@ -16,14 +16,14 @@
   >
     <div class="col-12 mb-5">
       <label class="form-label d-flex"
-        >Page Name<span class="text-danger">*</span></label
+        >Topic Name<span class="text-danger">*</span></label
       >
       <input
         type="text"
         class="input-area"
         name="cname"
         formControlName="CommunityName"
-        placeholder="Enter your page name"
+        placeholder="Enter your topic name"
         (keyup)="onCommunityNameChange()"
       />
     </div>
@@ -107,7 +107,7 @@
     </div>
 
     <div class="col-12 mb-5">
-      <label class="form-label d-flex">Page Description</label>
+      <label class="form-label d-flex">Description</label>
       <textarea
         name="dec"
         cols="30"
@@ -142,7 +142,7 @@
 
     <div class="col-12 mb-5">
       <label class="form-label d-flex"
-        >Page Url<span class="text-danger">*</span></label
+        >Topic Url<span class="text-danger">*</span></label
       >
       <div class="input-group">
         <div class="input-group-prepend">
@@ -155,7 +155,7 @@
           class="input-area ps-1"
           name="cSlug"
           formControlName="slug"
-          placeholder="Enter page url slug"
+          placeholder="Enter topic url slug"
         />
       </div>
     </div>

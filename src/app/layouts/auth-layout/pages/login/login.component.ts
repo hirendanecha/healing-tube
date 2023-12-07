@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
       title: 'Freeedom buzz login',
       url: `${environment.webUrl}login`,
       description: 'login page',
-      image: `${environment.webUrl}assets/images/landingpage/freedom-buzz.png`,
+      image: `${environment.webUrl}assets/images/landingpage/Healing-Tube-Logo.png`,
     };
     // this.seoService.updateSeoMetaData(data);
   }

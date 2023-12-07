@@ -21,11 +21,11 @@ const routes: Routes = [
         tags: [
           {
             name: 'og:title',
-            content: 'Freedom Home Page',
+            content: 'Healing tube Home Page',
           },
           {
             name: 'og:description',
-            content: 'Welcome to freedom buzz home page',
+            content: 'Welcome to Healing tube home page',
           },
           {
             name: 'og:url',
@@ -34,7 +34,7 @@ const routes: Routes = [
           {
             name: 'og:image',
             content:
-              'https://freedom.buzz/assets/images/banner/freedom-buzz-high-res.jpeg',
+              'https://healing.tube/assets/images/banner/Healing-Tube-Logo.png',
           },
         ],
         links: [
@@ -52,15 +52,15 @@ const routes: Routes = [
     canActivate: mapToCanActivate([MetafrenzyGuard, AuthenticationGuard]),
     data: {
       metafrenzzy: {
-        title: 'Community',
+        title: 'Health Practitioner',
         tags: [
           {
             name: 'og:title',
-            content: 'Freedom Community',
+            content: 'Healing tube Health Practitioner',
           },
           {
             name: 'og:description',
-            content: 'Freedom local community',
+            content: 'Health Practitioner',
           },
           {
             name: 'og:url',
@@ -69,7 +69,7 @@ const routes: Routes = [
           {
             name: 'og:image',
             content:
-              'https://dev.freedom.buzz/assets/images/freedom-community.jpg',
+              'https://healing.tube/assets/images/healing-community.png',
           },
         ],
         links: [
@@ -91,11 +91,11 @@ const routes: Routes = [
         tags: [
           {
             name: 'og:title',
-            content: 'Freedom Pages',
+            content: 'Health Topics',
           },
           {
             name: 'og:description',
-            content: 'Freedom Groups and pages',
+            content: 'Healing tube Health Topics',
           },
           {
             name: 'og:url',
@@ -103,7 +103,7 @@ const routes: Routes = [
           },
           {
             name: 'og:image',
-            content: 'https://dev.freedom.buzz/assets/images/freedom-pages.jpg',
+            content: 'https://healing.tube/assets/images/healing-pages.png',
           },
         ],
         links: [
@@ -125,7 +125,7 @@ const routes: Routes = [
         tags: [
           {
             name: 'og:title',
-            content: 'Freedom Feed Posts',
+            content: 'Healing Feed Posts',
           },
           {
             name: 'og:description',
@@ -137,7 +137,7 @@ const routes: Routes = [
           },
           {
             name: 'og:image',
-            content: 'https://dev.freedom.buzz/assets/images/freedom-post.jpg',
+            content: 'https://healing.tube/assets/images/healing-post.png',
           },
         ],
         links: [
