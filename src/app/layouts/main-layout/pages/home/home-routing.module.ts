@@ -21,11 +21,11 @@ const routes: Routes = [
         tags: [
           {
             name: 'og:title',
-            content: 'Freedom Home Page',
+            content: 'Healing tube Home Page',
           },
           {
             name: 'og:description',
-            content: 'Welcome to freedom buzz home page',
+            content: 'Welcome to Healing tube home page',
           },
           {
             name: 'og:url',
@@ -52,15 +52,15 @@ const routes: Routes = [
     canActivate: mapToCanActivate([MetafrenzyGuard, AuthenticationGuard]),
     data: {
       metafrenzzy: {
-        title: 'Community',
+        title: 'Health Practitioner',
         tags: [
           {
             name: 'og:title',
-            content: 'Freedom Community',
+            content: 'Healing tube Health Practitioner',
           },
           {
             name: 'og:description',
-            content: 'Freedom local community',
+            content: 'Health Practitioner',
           },
           {
             name: 'og:url',
@@ -95,7 +95,7 @@ const routes: Routes = [
           },
           {
             name: 'og:description',
-            content: 'Freedom Groups and pages',
+            content: 'Healing tube Health Topics',
           },
           {
             name: 'og:url',
