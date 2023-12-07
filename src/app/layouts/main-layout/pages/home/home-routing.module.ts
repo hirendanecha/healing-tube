@@ -125,7 +125,7 @@ const routes: Routes = [
         tags: [
           {
             name: 'og:title',
-            content: 'Freedom Feed Posts',
+            content: 'Healing Feed Posts',
           },
           {
             name: 'og:description',

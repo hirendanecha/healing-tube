@@ -82,14 +82,14 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
           this.metafrenzyService.setMetaTag('og:description', data.description);
           this.metafrenzyService.setMetaTag('og:url', data.url);
           this.metafrenzyService.setMetaTag('og:image', data.image);
-          this.metafrenzyService.setMetaTag("og:site_name", 'Freedom.Buzz');
+          this.metafrenzyService.setMetaTag("og:site_name", 'healing.tube');
           this.metafrenzyService.setOpenGraph({
             title: data.title,
             //description: post.postToProfileIdName === '' ? post.profileName: post.postToProfileIdName,
             description: data.description,
             url: data.url,
             image: data.image,
-            site_name: 'Freedom.Buzz'
+            site_name: 'healing.tube'
           });
           // this.seoService.updateSeoMetaData(data);
         }

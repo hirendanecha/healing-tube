@@ -1,6 +1,6 @@
-const url = 'https://dev-api.freedom.buzz';
-const webUrl = 'https://dev.freedom.buzz/';
-const tubeUrl = 'https://dev.tube.freedom.buzz/'
+const url = 'https://api.healing.tube';
+const webUrl = 'https://healing.tube/';
+const tubeUrl = 'https://video.healing.tube/'
 
 // const url = 'http://localhost:8080';
 // const webUrl = 'http://localhost:4200/';
