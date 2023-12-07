@@ -386,12 +386,18 @@
   }
 
   ::ng-deep {
+    .tag-image-preview{
+      img{
+        padding-top: 16px;
+      }
+    }
     .post-description {
       h1,
       h2,
       h3,
       h4,
       h5,
+      p,
       h6,
       span,
       b,
