@@ -88,9 +88,9 @@ export function app(): express.Express {
           description:
             'The Umbrella platform for All freedom based projects worldwide',
           image:
-            'https://freedom.buzz/assets/images/banner/freedom-buzz-high-res.jpeg',
-          site: 'https://freedom.buzz/',
-          url: 'https://freedom.buzz' + params,
+            'https://www.healing.tube/assets/images/Healing-Tube-Logo.png',
+          site: 'https://www.healing.tube/',
+          url: 'https://www.healing.tube' + params,
           keywords: 'HealingTube',
         };
         if (
@@ -153,9 +153,9 @@ export function app(): express.Express {
           const pdhtml = document.createElement('div');
           pdhtml.innerHTML = post?.postdescription || post?.metadescription;
           const talent = {
-            name: post?.title || post?.albumname || 'Freedom.Buzz Post',
+            name: post?.title || post?.albumname || 'Healing.Tube Post',
             description: pdhtml?.textContent || 'Post content',
-            image: post?.thumbfilename || post?.metaimage || post?.imageUrl || 'https://freedom.buzz/assets/images/banner/freedom-buzz-high-res.jpeg',
+            image: post?.thumbfilename || post?.metaimage || post?.imageUrl || 'https://www.healing.tube/assets/images/Healing-Tube-Logo.png',
           };
           seo.title = talent.name;
           seo.description = strip_html_tags(talent.description);
