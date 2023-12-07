@@ -91,7 +91,7 @@ const routes: Routes = [
         tags: [
           {
             name: 'og:title',
-            content: 'Freedom Pages',
+            content: 'Health Topics',
           },
           {
             name: 'og:description',
