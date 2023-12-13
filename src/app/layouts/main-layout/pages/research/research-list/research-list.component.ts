@@ -332,6 +332,6 @@ export class ResearchListComponent {
   }
 
   onChangeTag(event) {
-    this.researchForm.get('keywords').setValue(event.target.value.replaceAll(' ', ','));
+    this.researchForm.get('keywords').setValue(event.target.value.replaceAll(' ', ',').replaceAll(/\s*,+\s*/g, ','));
   }
 }
