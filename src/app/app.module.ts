@@ -15,7 +15,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthenticationGuard } from './@shared/guards/authentication.guard';
 import { SharedModule } from './@shared/shared.module';
-import { MetafrenzyModule, MetafrenzyService } from 'ngx-metafrenzy';
 
 @NgModule({
   declarations: [AppComponent, ToastsContainerComponent, LandingPageComponent],
@@ -23,9 +22,8 @@ import { MetafrenzyModule, MetafrenzyService } from 'ngx-metafrenzy';
     AppRoutingModule,
     HttpClientModule,
     SharedModule,
-    BrowserModule.withServerTransition({ appId: 'Healing-tube' }),
+    BrowserModule.withServerTransition({ appId: 'HealingTube' }),
     BrowserAnimationsModule,
-    MetafrenzyModule.forRoot(),
     TransferHttpCacheModule,
   ],
   providers: [

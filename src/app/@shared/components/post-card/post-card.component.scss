@@ -386,21 +386,16 @@
   }
 
   ::ng-deep {
-    .tag-image-preview{
-      img{
-        padding-top: 16px;
-      }
-    }
     .post-description {
       h1,
       h2,
       h3,
       h4,
       h5,
-      p,
       h6,
       span,
       b,
+      p,
       em,
       div,
       strong,
@@ -413,7 +408,7 @@
         font-weight: 500 !important;
         color: unset !important;
       }
-      a{
+      a {
         font-size: 16px !important;
         line-height: 22px !important;
         margin: unset !important;
@@ -453,14 +448,32 @@
         margin: unset;
         background-color: unset !important;
       }
-      p, em, span {
-        color: var(--para-2nd-color)!important
+      p,
+      em,
+      span {
+        color: var(--para-2nd-color) !important;
       }
-      .comment-description{
-        img{
+      .comment-description {
+        img {
           display: none !important;
         }
       }
     }
+    .emoji-select{
+      max-width: 60px;
+      min-width: 60px;
+    }
+    .emojiModelStyle {
+      width: 282px;
+      // height: 225px;
+
+      .emoji-style{
+        width: 70px;
+      }
+    }
+  }
+  .comment-description ::ng-deep img[src$=".gif"] {
+    display: unset !important;
+    width: 70px;
   }
 }
