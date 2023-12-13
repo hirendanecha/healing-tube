@@ -30,6 +30,8 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   metaData: any = {};
   isMetaLoader: boolean = false;
 
+  copyImage: any
+
   constructor(
     private renderer: Renderer2,
     private customerService: CustomerService,
@@ -50,6 +52,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     if (val === '') {
       this.clearUserSearchData();
       this.clearMetaData();
+      this.onClearFile();
     } else {
       this.getMetaDataFromUrlStr();
       this.checkUserTagFlag();
@@ -112,7 +115,10 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
 
   getMetaDataFromUrlStr(): void {
     const htmlText = this.tagInputDiv?.nativeElement?.innerHTML || '';
-    console.log(htmlText);
+    this.extractImageUrlFromContent(htmlText);
+    if (htmlText === '') {
+      this.onClearFile()
+    }
     const text = htmlText.replace(/<[^>]*>/g, '');
     // const matches = text.match(/(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z0-9]{2,})?(.*)/gi);
     // const matches = text.match(/((ftp|http|https):\/\/)?(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/);
@@ -134,11 +140,17 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
                 const urls = res.meta?.image?.url;
                 const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
 
+                const metatitles = res?.meta?.title;
+                const metatitle = Array.isArray(metatitles) ? metatitles?.[0] : metatitles;
+
+                const metaurls = res?.meta?.url || url;
+                const metaursl = Array.isArray(metaurls) ? metaurls?.[0] : metaurls;
+
                 this.metaData = {
-                  title: res?.meta?.title,
+                  title: metatitle,
                   metadescription: res?.meta?.description,
                   metaimage: imgUrl,
-                  metalink: res?.meta?.url || url,
+                  metalink: metaursl,
                   url: url,
                 };
 
@@ -233,5 +245,25 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
         meta: this.metaData,
       });
     }
+  }
+
+  extractImageUrlFromContent(content: string): string | null {
+    const contentContainer = document.createElement('div');
+    contentContainer.innerHTML = content;
+    const imgTag = contentContainer.querySelector('img');
+
+    if (imgTag) {
+      const imgTitle = imgTag.getAttribute('title');
+      const imgStyle = imgTag.getAttribute('style');
+      const imageGif = imgTag.getAttribute('src').toLowerCase().endsWith('.gif');
+      if (!imgTitle && !imgStyle && !imageGif) {
+        this.copyImage = imgTag.getAttribute('src');
+      }
+    }
+    return null;
+  }
+
+  onClearFile(){
+    this.copyImage = null;
   }
 }

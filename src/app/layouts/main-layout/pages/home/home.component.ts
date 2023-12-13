@@ -64,6 +64,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   pdfName: string = '';
   notificationId: number;
   buttonClicked = false;
+  notificationSoundOct = ''
 
   constructor(
     private modalService: NgbModal,
@@ -110,22 +111,26 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.socketService.socket?.connected) {
       this.socketService.socket?.connect();
     }
-
     this.socketService.socket?.emit('join', { room: this.profileId });
     this.socketService.socket?.on('notification', (data: any) => {
-      console.log(data);
       if (data) {
         this.notificationId = data.id;
         this.sharedService.isNotify = true;
+        if (data?.actionType === 'T') {
+          var sound = new Howl({
+            src: ['https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3']
+          });
+          this.notificationSoundOct = localStorage?.getItem('notificationSoundEnabled');
+          if (this.notificationSoundOct !== 'N') {
+            if (sound) {
+              sound?.play();
+            }
+          }
+        }
         if (this.notificationId) {
           this.customerService.getNotification(this.notificationId).subscribe({
             next: (res) => {
-              console.log(res);
               localStorage.setItem('isRead', res.data[0]?.isRead);
-              var sound = new Howl({
-                src: ['https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3']
-              });
-              sound.play()
             },
             error: (error) => {
               console.log(error);

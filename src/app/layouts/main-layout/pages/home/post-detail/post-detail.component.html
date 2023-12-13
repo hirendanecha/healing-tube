@@ -1,3 +1,6 @@
-<ng-container *ngIf="post?.id">
+<ng-container *ngIf="post?.id else noPostFound">
   <app-post-card [post]="post" />
 </ng-container>
+<ng-template #noPostFound>
+  <span class="text-center text-bold">Post has been deleted by the end user.</span>
+</ng-template>
