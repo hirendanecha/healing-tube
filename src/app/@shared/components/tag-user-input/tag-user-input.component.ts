@@ -39,7 +39,6 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     private spinner: NgxSpinnerService,
   ) {
     this.metaDataSubject.pipe(debounceTime(10)).subscribe(() => {
-      console.log('in!!!!')
       this.getMetaDataFromUrlStr();
       this.checkUserTagFlag();
     });
@@ -53,10 +52,11 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
       this.clearUserSearchData();
       this.clearMetaData();
       this.onClearFile();
-    } else {
+      } else {
       this.getMetaDataFromUrlStr();
       this.checkUserTagFlag();
     }
+    this.moveCursorToEnd()
   }
 
   ngOnDestroy(): void {
@@ -70,7 +70,6 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   messageOnKeyEvent(): void {
     this.metaDataSubject.next();
     this.emitChangeEvent();
-    console.log('in!!!!')
   }
 
   // checkUserTagFlag1(): void {
@@ -119,6 +118,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     if (htmlText === '') {
       this.onClearFile()
     }
+
     const text = htmlText.replace(/<[^>]*>/g, '');
     // const matches = text.match(/(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z0-9]{2,})?(.*)/gi);
     // const matches = text.match(/((ftp|http|https):\/\/)?(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/);
@@ -145,6 +145,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
 
                 const metaurls = res?.meta?.url || url;
                 const metaursl = Array.isArray(metaurls) ? metaurls?.[0] : metaurls;
+
 
                 this.metaData = {
                   title: metatitle,
@@ -175,7 +176,10 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   moveCursorToEnd(): void {
     const range = document.createRange();
     const selection = window.getSelection();
-    range.setStart(this.tagInputDiv?.nativeElement, this.tagInputDiv?.nativeElement.childNodes.length);
+    const tagInputDiv = this.tagInputDiv?.nativeElement;
+    if (tagInputDiv && tagInputDiv.childNodes.length > 0) {
+      range.setStart(this.tagInputDiv?.nativeElement, this.tagInputDiv?.nativeElement.childNodes.length);
+    }
     range.collapse(true);
     selection.removeAllRanges();
     selection.addRange(range);
