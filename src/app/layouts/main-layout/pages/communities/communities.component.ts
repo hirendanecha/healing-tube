@@ -3,6 +3,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddCommunityModalComponent } from './add-community-modal/add-community-modal.component';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CommunityService } from 'src/app/@shared/services/community.service';
+import { SeoService } from 'src/app/@shared/services/seo.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-communities',
@@ -18,11 +20,18 @@ export class CommunitiesComponent {
   constructor(
     private modalService: NgbModal,
     private spinner: NgxSpinnerService,
-    private communityService: CommunityService
+    private communityService: CommunityService,
+    private seoService: SeoService
   ) {
     this.profileId = Number(localStorage.getItem('profileId'));
 
     this.getCommunities();
+    const data = {
+      title: 'HealingTube Health Practitioner',
+      url: `${location.href}`,
+      description: '',
+    };
+    this.seoService.updateSeoMetaData(data);
   }
 
   getCommunities(): void {
@@ -36,7 +45,6 @@ export class CommunitiesComponent {
     } else {
       getCommunitiesObs = this.communityService.getCommunityByUserId(this.profileId, 'community');
     }
-
     this.isCommunityLoader = true;
     getCommunitiesObs?.subscribe({
       next: (res: any) => {
