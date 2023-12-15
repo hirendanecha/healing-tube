@@ -7,13 +7,13 @@ import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 
 const TOKEN_KEY = 'auth-token';
-const USER_KEY = 'auth-user';
+const USER_KEY = 'userData';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TokenStorageService {
-  isUserAuthenticated: Subject<boolean> = new BehaviorSubject<boolean>(false);
+  isUserAuthenticated: Subject<boolean> = new BehaviorSubject<boolean>(false);  
   public _credentials: any = {};
 
   constructor(private cookieService: CookieService,

@@ -1,8 +1,9 @@
 import { Component, OnChanges, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
+import { TokenStorageService } from 'src/app/@shared/services/token-storage.service';
 
 @Component({
   selector: 'app-healing-practitioner-registration',
@@ -79,10 +80,27 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
     private seoService: SeoService,
     private router: Router,
     private spinner: NgxSpinnerService,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    private route: ActivatedRoute,
+    private tokenStorage: TokenStorageService
   ) {
-    this.profileId = Number(localStorage.getItem('profileId'));
+    const queryParams = this.route.snapshot.queryParams;
+    const newParams = { ...queryParams };
+    // console.log(newParams)
+    // this.channelId = this.shareService?.channelData?.id;
+    // this.route.queryParams.subscribe((params: any) => {
+    //   console.log(params.channelId);
+    if (newParams['token']) {
+      const token = newParams['token'];
+      this.tokenStorage.saveToken(token)
+      delete newParams['token']
+      const navigationExtras: NavigationExtras = {
+        queryParams: newParams
+      };
+      this.router.navigate([], navigationExtras);
+    }
 
+    this.profileId = Number(localStorage.getItem('profileId'));
     const data = {
       title: 'HealingTube Registration',
       url: `${location.href}`,

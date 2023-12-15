@@ -50,7 +50,7 @@ export class SharedService {
     const profileId = localStorage.getItem('profileId');
     if (profileId) {
       const localUserData = JSON.parse(localStorage.getItem('userData'));
-      if (localUserData?.ID) {
+      if (localUserData?.Id) {
         this.userData = localUserData;
       }
 

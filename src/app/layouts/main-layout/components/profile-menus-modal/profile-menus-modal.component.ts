@@ -28,7 +28,7 @@ export class ProfileMenusModalComponent {
     private customerService: CustomerService,
     private cookieService: CookieService,
   ) {
-    this.userId = +localStorage.getItem('user_id');
+    this.userId = +(this.tokenStorageService.getUser().Id) as any;
     this.profileId = +localStorage.getItem('profileId');
   }
 
