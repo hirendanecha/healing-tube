@@ -21,7 +21,7 @@ export class NotificationsComponent {
     private seoService: SeoService
   ) { 
     const data = {
-      title: 'Freedom.Buzz Notification',
+      title: 'HealingTube Notification',
       url: `${location.href}`,
       description: '',
     };
@@ -67,7 +67,7 @@ export class NotificationsComponent {
       next: (res) => {
         this.toastService.success(res.message);
         this.getNotificationList();
-      },
+      },    
     });
   }
 }
