@@ -27,11 +27,18 @@ export class CommunitiesComponent {
     private router: Router
   ) {
     this.profileId = Number(localStorage.getItem('profileId'));
+    console.log(history.state.data)
+    if (history.state.data) {
+      const data = history.state.data
+      this.getAllCommunities(data);
+    } else {
 
-    this.getCommunities();
+      this.getAllCommunities({});
+    }
+    // this.getCommunities();
     const data = {
       title: 'HealingTube Health Practitioner',
-      url: `${location.href}`,
+      url: `${window.location.href}`,
       description: '',
     };
     this.seoService.updateSeoMetaData(data);
@@ -66,8 +73,29 @@ export class CommunitiesComponent {
     });
   }
 
+  getAllCommunities(data: any): void {
+    this.communities = [];
+    this.isCommunityLoader = true;
+    this.communityService.getAllCommunities(data).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.communities = res;
+        } else {
+          this.communities = [];
+        }
+      },
+      error: (error) => {
+        console.log(error);
+      },
+      complete: () => {
+        this.isCommunityLoader = false;
+      }
+    });
+  }
+
+
   createCommunity() {
-    this.router.navigate(['communities/add-pratitioner'])
+    this.router.navigate(['health-practitioner/add-practitioner'])
   }
   // createCommunity() {
   //   const modalRef = this.modalService.open(AddCommunityModalComponent, {

@@ -32,7 +32,7 @@ export class HealthPraatitionerCardComponent {
       this.router.navigate(['pages', this.community?.slug]);
     } else {
       if (this.community?.isApprove === 'Y') {
-        this.router.navigate(['communities', this.community?.slug]);
+        this.router.navigate(['health-practitioner']);
       } else {
         this.toastService.danger('This community not approve yet.');
       }
@@ -79,9 +79,8 @@ export class HealthPraatitionerCardComponent {
 
     modalRef.componentInstance.title = `${actionType} ${this.community.pageType}`;
     modalRef.componentInstance.confirmButtonLabel = actionType;
-    modalRef.componentInstance.message = `Are you sure want to ${actionType.toLowerCase()} this ${
-      this.community.pageType
-    }?`;
+    modalRef.componentInstance.message = `Are you sure want to ${actionType.toLowerCase()} this ${this.community.pageType
+      }?`;
 
     modalRef.result.then((res) => {
       if (res === 'success') {

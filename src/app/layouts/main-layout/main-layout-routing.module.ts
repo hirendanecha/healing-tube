@@ -17,7 +17,7 @@ const routes: Routes = [
         }
       },
       {
-        path: 'communities',
+        path: 'health-practitioner',
         loadChildren: () => import('./pages/communities/communities.module').then((m) => m.CommunitiesModule),
         data: {
           isShowLeftSideBar: true
@@ -55,6 +55,16 @@ const routes: Routes = [
           isShowLeftSideBar: true,
           isShowRightSideBar: true,
           isShowResearchLeftSideBar: true
+        },
+        canActivate: mapToCanActivate([AuthenticationGuard]),
+      },
+      {
+        path: 'request-video-call',
+        loadChildren: () => import('src/app/layouts/main-layout/pages/healing-practitioner-registration/healing-practitioner-registration.module').then((m) => m.HealingPractitionerRegistrationModule),
+        data: {
+          isShowLeftSideBar: false,
+          isShowRightSideBar: false,
+          isShowResearchLeftSideBar: false,
         },
         canActivate: mapToCanActivate([AuthenticationGuard]),
       }

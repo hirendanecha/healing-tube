@@ -64,7 +64,7 @@ export class SeoService {
       if (isPlatformServer(this.platformId)) {
         tagValue.url = this.injector.get('REQ_URL').toLowerCase();
       } else {
-        tagValue.url = this.document.URL.toLowerCase() || this.document.location.href.toLowerCase();
+        tagValue.url = this.document.URL.toLowerCase() || this.document.window.location.href.toLowerCase();
       }
     }
 

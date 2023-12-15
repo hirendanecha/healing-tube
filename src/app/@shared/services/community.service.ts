@@ -10,7 +10,7 @@ import { Community } from '../constant/customer';
 export class CommunityService {
   private baseUrl = environment.serverUrl + 'community';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   upload(file: File, id: any, defaultType: string): Observable<HttpEvent<any>> {
     const formData: FormData = new FormData();
@@ -84,8 +84,7 @@ export class CommunityService {
 
   getJoinedCommunityByProfileId(id, pageType: string): Observable<any> {
     return this.http.get(
-      `${
-        this.baseUrl
+      `${this.baseUrl
       }/joined-community/${id}?pageType=${pageType}&q=${Date.now()}`
     );
   }
@@ -109,5 +108,9 @@ export class CommunityService {
 
   getCategories(): Observable<any> {
     return this.http.get(`${this.baseUrl}/get-emphasis-and-area`);
+  }
+  
+  getAllCommunities(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/get-communities`, data)
   }
 }

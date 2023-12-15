@@ -90,15 +90,15 @@ export class HeaderComponent {
       next: (res: any) => {
         if (res?.data?.length > 0) {
           this.userList = res.data;
-          this.userSearchNgbDropdown.open();
+          this.userSearchNgbDropdown?.open();
         } else {
           this.userList = [];
-          this.userSearchNgbDropdown.close();
+          this.userSearchNgbDropdown?.close();
         }
       },
       error: () => {
         this.userList = [];
-        this.userSearchNgbDropdown.close();
+        this.userSearchNgbDropdown?.close();
       },
     });
   }

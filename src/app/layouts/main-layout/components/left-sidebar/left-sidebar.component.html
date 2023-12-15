@@ -36,7 +36,7 @@
       <li class="ms-1">
         <a
           class="d-flex gap-4"
-          routerLink="/communities"
+          routerLink="/health-practitioner"
           routerLinkActive="active"
           (click)="closeSidebar()"
         >
@@ -53,6 +53,17 @@
         >
           <fa-icon [icon]="['fas', 'stethoscope']" class="font-24-px" />
           <span>Healing Topics</span>
+        </a>
+      </li>
+      <li class="ms-1">
+        <a
+          class="d-flex gap-4"
+          routerLink="/request-video-call"
+          routerLinkActive="active"
+          (click)="closeSidebar()"
+        >
+          <fa-icon [icon]="['fas', 'phone']" class="font-24-px" />
+          <span>Request Private Video Call</span>
         </a>
       </li>
 

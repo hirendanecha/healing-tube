@@ -64,7 +64,7 @@ export class ResearchListComponent {
   ) {
     const data = {
       title: 'HealingTube Research',
-      url: `${location.href}`,
+      url: `${window.location.href}`,
       description: '',
     };
     this.seoService.updateSeoMetaData(data);
