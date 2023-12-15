@@ -63,7 +63,7 @@ export class ResearchListComponent {
     private seoService: SeoService
   ) {
     const data = {
-      title: 'Freedom.Buzz Research',
+      title: 'HealingTube Research',
       url: `${location.href}`,
       description: '',
     };
