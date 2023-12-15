@@ -22,6 +22,16 @@ const routes: Routes = [
       {
         path: 'reset-password/user',
         component: ResetPasswordComponent,
+      },
+      {
+        path: 'healing-registration',
+        loadChildren: () => import('src/app/layouts/main-layout/pages/healing-practitioner-registration/healing-practitioner-registration.module').then((m) => m.HealingPractitionerRegistrationModule),
+        data: {
+          isShowLeftSideBar: false,
+          isShowRightSideBar: false,
+          isShowResearchLeftSideBar: false
+        },
+        // canActivate: mapToCanActivate([AuthenticationGuard]),
       }
     ]
   }
