@@ -1,13 +1,33 @@
-.form-dark {
-  label {
-    color: var(--heading-1st-color) !important;
+.add-pratitioner-contaner{
+  background-color: var(--section-1st-color);
+  padding: 25px;
+  border-radius: 15px;
+
+  .form-dark {
+    label {
+      color: var(--heading-1st-color) !important;
+    }
+    .login-button {
+      padding: 0.8rem 2.6rem;
+    }
   }
-  .login-button {
-    padding: 0.8rem 2.6rem;
+  .custom-textarea{
+    textarea{
+      color: var(--heading-1st-color);
+    }
   }
-}
-.custom-textarea{
-  textarea{
-    color: var(--heading-1st-color);
+
+  .title-container {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    label{
+      font-weight: 500;
+    }
+  }
+  .form-check-input {
+    padding: 12px !important;
   }
 }
