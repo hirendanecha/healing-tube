@@ -3,6 +3,7 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
+import { ToastService } from 'src/app/@shared/services/toast.service';
 import { TokenStorageService } from 'src/app/@shared/services/token-storage.service';
 
 @Component({
@@ -82,7 +83,8 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private customerService: CustomerService,
     private route: ActivatedRoute,
-    private tokenStorage: TokenStorageService
+    private tokenStorage: TokenStorageService,
+    private toastService: ToastService,
   ) {
     const queryParams = this.route.snapshot.queryParams;
     const newParams = { ...queryParams };
@@ -108,12 +110,9 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
     };
     this.seoService.updateSeoMetaData(data);
   }
+
   ngOnInit(): void {
     this.getAllCountries();
-  }
-
-  backPreview() {
-    this.selectPractitionerPage = !this.selectPractitionerPage;
   }
 
   updateCheckbox(selectedOption: 'country' | 'worldwide') {
@@ -125,19 +124,6 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
       this.allStateData = null
       this.isCountryChecked = false;
     }
-    console.log(selectedOption);
-  }
-
-  selectCard(card: any): void {
-    this.selectedCard = card;
-    console.log('Selected Card:', this.selectedCard);
-  }
-
-  changeCountry() {
-    if (this.isCountryChecked) {
-      this.getAllState();
-    }
-    console.log(`Selected Option: Country, Country: ${this.selectedCountry}, State: ${this.selectedState}`)
   }
 
   getAllCountries() {
@@ -168,5 +154,39 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
         console.log(error);
       },
     });
+  }
+  isSelected(title: string): boolean {
+    return this.selectedCard === title;
+  }
+
+  selectCard(title: any): void {
+    if (this.selectedCard === title) {
+      this.selectedCard = null;
+    } else {
+      this.selectedCard = title;
+    }
+  }
+
+  changeCountry() {
+    if (this.isCountryChecked) {
+      this.getAllState();
+    }
+  }
+
+  backPreview() {
+    this.selectPractitionerPage = !this.selectPractitionerPage;
+  }
+
+  nextPageSearch(){
+    if (this.selectedCard) {
+      const practitionerRequirements = {
+        selectedCard: this.selectedCard,
+        selectedCountry: this.selectedCountry,
+        selectedState: this.selectedState,
+      };
+      console.log(practitionerRequirements);
+    } else {
+      this.toastService.danger('Please select What emphasis are you interested in healing');
+    }
   }
 }
