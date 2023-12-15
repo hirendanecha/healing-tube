@@ -10,7 +10,7 @@ import { Community } from '../constant/customer';
 export class CommunityService {
   private baseUrl = environment.serverUrl + 'community';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   upload(file: File, id: any, defaultType: string): Observable<HttpEvent<any>> {
     const formData: FormData = new FormData();
@@ -32,11 +32,15 @@ export class CommunityService {
     return this.http.request(req);
   }
 
-  getLocalCommunities(id:number): Observable<Community> {
-    return this.http.get<Community>(`${this.baseUrl}/get-communities-pages/${id}`);
+  getLocalCommunities(id: number): Observable<Community> {
+    return this.http.get<Community>(
+      `${this.baseUrl}/get-communities-pages/${id}`
+    );
   }
   getCommunity(id, pageType: string): Observable<Community> {
-    return this.http.get<Community>(`${this.baseUrl}/?id=${id}&pageType=${pageType}&q=${Date.now()}`);
+    return this.http.get<Community>(
+      `${this.baseUrl}/?id=${id}&pageType=${pageType}&q=${Date.now()}`
+    );
   }
 
   createCommunity(communityData): Observable<Community> {
@@ -44,7 +48,10 @@ export class CommunityService {
   }
 
   editCommunity(communityData, id): Observable<Community> {
-    return this.http.put<Community>(`${this.baseUrl}/edit/${id}`, communityData);
+    return this.http.put<Community>(
+      `${this.baseUrl}/edit/${id}`,
+      communityData
+    );
   }
 
   joinCommunity(data: any): Observable<any> {
@@ -70,11 +77,17 @@ export class CommunityService {
   }
 
   getCommunityByUserId(id, pageType: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/user/${id}?pageType=${pageType}&q=${Date.now()}`);
+    return this.http.get(
+      `${this.baseUrl}/user/${id}?pageType=${pageType}&q=${Date.now()}`
+    );
   }
 
   getJoinedCommunityByProfileId(id, pageType: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/joined-community/${id}?pageType=${pageType}&q=${Date.now()}`);
+    return this.http.get(
+      `${
+        this.baseUrl
+      }/joined-community/${id}?pageType=${pageType}&q=${Date.now()}`
+    );
   }
 
   getCommunityById(id): Observable<any> {
@@ -92,5 +105,9 @@ export class CommunityService {
     return this.http.delete(
       `${this.baseUrl}/leave?communityId=${id}&profileId=${profileId}`
     );
+  }
+
+  getCategories(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/get-emphasis-and-area`);
   }
 }

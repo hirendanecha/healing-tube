@@ -5,6 +5,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { CommunityService } from 'src/app/@shared/services/community.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
 import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-communities',
@@ -21,7 +23,8 @@ export class CommunitiesComponent {
     private modalService: NgbModal,
     private spinner: NgxSpinnerService,
     private communityService: CommunityService,
-    private seoService: SeoService
+    private seoService: SeoService,
+    private router: Router
   ) {
     this.profileId = Number(localStorage.getItem('profileId'));
 
@@ -64,20 +67,23 @@ export class CommunitiesComponent {
   }
 
   createCommunity() {
-    const modalRef = this.modalService.open(AddCommunityModalComponent, {
-      centered: true,
-      backdrop: 'static',
-      keyboard: false,
-      size: 'lg'
-    });
-    modalRef.componentInstance.cancelButtonLabel = 'Cancel';
-    modalRef.componentInstance.confirmButtonLabel = 'Create';
-    modalRef.componentInstance.closeIcon = true;
-    modalRef.result.then(res => {
-      if (res === 'success') {
-        this.activeIdTab = 'my';
-        this.getCommunities();
-      }
-    });
+    this.router.navigate(['communities/add-pratitioner'])
   }
+  // createCommunity() {
+  //   const modalRef = this.modalService.open(AddCommunityModalComponent, {
+  //     centered: true,
+  //     backdrop: 'static',
+  //     keyboard: false,
+  //     size: 'lg'
+  //   });
+  //   modalRef.componentInstance.cancelButtonLabel = 'Cancel';
+  //   modalRef.componentInstance.confirmButtonLabel = 'Create';
+  //   modalRef.componentInstance.closeIcon = true;
+  //   modalRef.result.then(res => {
+  //     if (res === 'success') {
+  //       this.activeIdTab = 'my';
+  //       this.getCommunities();
+  //     }
+  //   });
+  // }
 }
