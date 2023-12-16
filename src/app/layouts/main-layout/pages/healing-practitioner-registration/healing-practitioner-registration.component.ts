@@ -84,6 +84,8 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
     },
   ];
 
+  isFromHome = false;
+
   constructor(
     private seoService: SeoService,
     private router: Router,
@@ -95,7 +97,10 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
   ) {
     const queryParams = this.route.snapshot.queryParams;
     const newParams = { ...queryParams };
-    // console.log(newParams)
+    console.log(this.router.routerState.snapshot.url);
+    this.selectPractitionerPage = this.router.routerState.snapshot.url.includes('request-video-call') || false;
+    this.isFromHome = this.router.routerState.snapshot.url.includes('request-video-call') || false;
+    console.log(this.selectPractitionerPage)
     // this.channelId = this.shareService?.channelData?.id;
     // this.route.queryParams.subscribe((params: any) => {
     //   console.log(params.channelId);
@@ -171,6 +176,7 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
       this.selectedCard = null;
     } else {
       this.selectedCard = id;
+      this.nextPageSearch();
     }
   }
 
