@@ -1,6 +1,7 @@
 import { Component, OnChanges, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { CommunityService } from 'src/app/@shared/services/community.service';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
 import { ToastService } from 'src/app/@shared/services/toast.service';
@@ -23,6 +24,10 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
   isWorldwideChecked: boolean = false;
 
   selectPractitionerPage: boolean;
+
+  practitionerArea: any = [];
+  selectedAreaValues: number[] = [];
+
 
   selectedCard: number;
   cards: any[] = [
@@ -94,6 +99,7 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
     private route: ActivatedRoute,
     private tokenStorage: TokenStorageService,
     private toastService: ToastService,
+    private communityService: CommunityService,
   ) {
     const queryParams = this.route.snapshot.queryParams;
     const newParams = { ...queryParams };
@@ -125,6 +131,7 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllCountries();
+    this.getCategories();
   }
 
   updateCheckbox(selectedOption: 'country' | 'worldwide') {
@@ -176,7 +183,7 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
       this.selectedCard = null;
     } else {
       this.selectedCard = id;
-      this.nextPageSearch();
+      // this.nextPageSearch();
     }
   }
 
@@ -196,11 +203,34 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
         selectedCard: this.selectedCard,
         selectedCountry: this.selectedCountry,
         selectedState: this.selectedState,
+        selectedAreas: this.selectedAreaValues
       };
-      console.log(practitionerRequirements);
       this.router.navigate(['/health-practitioner'], { state: { data: practitionerRequirements } });
     } else {
       this.toastService.danger('Please select What emphasis are you interested in healing');
+    }
+  }
+
+  getCategories() {
+    this.communityService.getCategories().subscribe({
+      next: (res) => {
+        this.practitionerArea = res.area;
+      },
+      error: (error) => {
+        this.spinner.hide();
+        console.log(error);
+      },
+    });
+  }
+
+  onAreaboxChange(event: any, area: any): void {
+    const isChecked = event.target.checked;
+    if (isChecked) {
+      this.selectedAreaValues.push(area.aId);
+    } else {
+      this.selectedAreaValues = this.selectedAreaValues.filter(
+        (id) => id !== area.aId
+      );
     }
   }
 }

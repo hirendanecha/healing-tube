@@ -346,4 +346,8 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
       );
     }
   }
+
+  clearForm(){
+    this.router.navigate(['/health-practitioner'])
+  }
 }

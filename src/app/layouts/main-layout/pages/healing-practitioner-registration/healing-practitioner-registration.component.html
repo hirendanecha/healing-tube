@@ -129,11 +129,36 @@
       </div>
     </div>
   </div>
-  <div class="d-flex justify-content-between">
+  <div class="d-flex flex-column mt-6">
+    <h4>Areas of Healing Practice</h4>
+    <div class="container">
+      <div class="row">
+        <div *ngFor="let area of practitionerArea" class="col-md-6 col-lg-3">
+          <div class="form-check">
+            <div class="d-flex align-items-center">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [value]="area.aId"
+                id="modality{{ area.aId }}"
+                (change)="onAreaboxChange($event, area)"
+              />
+              <div class="title-container">
+                <label class="form-check-label ms-2" for="modality{{ area.aId }}" [title]="area.name">
+                  {{ area.name }}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-100 mt-5">
     <button
       *ngIf="!isFromHome"
       (click)="backPreview()"
-      class="btn btn-primary d-flex align-items-center"
+      class="btn btn-primary d-flex align-items-center float-start"
     >
       <fa-icon
         [icon]="['fas', 'arrow-left-long']"
@@ -141,9 +166,9 @@
         title="Back"
       />Back
     </button>
-    <!-- <button
+    <button
       (click)="nextPageSearch()"
-      class="btn btn-primary d-flex align-items-center"
+      class="btn btn-primary d-flex align-items-center float-end"
     >
       Next
       <fa-icon
@@ -151,6 +176,6 @@
         class="c-pointer close-icon ms-2"
         title="Next"
       />
-    </button> -->
+    </button>
   </div>
 </ng-container>
