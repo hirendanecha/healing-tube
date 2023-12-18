@@ -249,8 +249,9 @@
       id="common-filter-cancel"
       type="button"
       class="cmn-btn alt p-2"
-      (click)="activeModal.close('Cancel')"
-    >
+      (click)="clearForm()"
+      >
+      <!-- (click)="activeModal.close('Cancel')" -->
       <!-- Cancel -->
       {{ cancelButtonLabel }}
     </button>

@@ -30,8 +30,16 @@
     }
   }
 }
+.form-check-input {
+  padding: 12px !important;
+}
 
-
+.container{
+  background: var(--section-1st-color);
+  box-shadow: var(--box-shadow);
+  border-radius: 10px;
+  padding: 10px 15px;
+}
 
 .form-check,
 .form-check-label{
