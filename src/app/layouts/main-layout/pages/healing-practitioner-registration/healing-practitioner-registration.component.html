@@ -31,7 +31,8 @@
             </p>
             <button>
               <a href="https://video.healing.tube/" class="btn btn-primary"
-                >Select</a>
+                >Select</a
+              >
             </button>
           </div>
         </div>
@@ -53,7 +54,7 @@
           (change)="updateCheckbox('country')"
         />
         <label class="form-check-label selectCountry" for="countryCheckbox">
-          <span class="d-none d-sm-block">Find a practitioner in&nbsp;</span
+          <span class="d-none d-sm-block">Find a local practitioner in&nbsp;</span
           >Country:
           <select
             id="Country"
@@ -106,16 +107,22 @@
   </div>
 
   <div class="healing-sub-container">
-    <h2 class="text-center mt-10">What emphasis are you interested in healing:</h2>
+    <h2 class="text-center mt-10">
+      What emphasis are you interested in healing:
+    </h2>
     <div class="d-flex justify-content-center mt-5">
       <div class="d-flex flex-wrap justify-content-center">
         <div *ngFor="let card of cards" class="card text-center">
           <div class="card-body">
             <h4 class="card-title">{{ card.title }}</h4>
             <p class="card-text">{{ card.description }}</p>
-            <button (click)="selectCard(card.title)">
-              <a class="btn" [ngClass]="isSelected(card.title) ? 'btn-success' : 'btn-primary'">
-                {{ isSelected(card.title) ? 'Selected' : 'Select' }}</a>
+            <button (click)="selectCard(card.id)">
+              <a
+                class="btn"
+                [ngClass]="isSelected(card.id) ? 'btn-success' : 'btn-primary'"
+              >
+                {{ isSelected(card.id) ? "Selected" : "Select" }}</a
+              >
             </button>
           </div>
         </div>
@@ -123,20 +130,27 @@
     </div>
   </div>
   <div class="d-flex justify-content-between">
-    <button (click)="backPreview()" class="btn btn-primary d-flex align-items-center">
+    <button
+      *ngIf="!isFromHome"
+      (click)="backPreview()"
+      class="btn btn-primary d-flex align-items-center"
+    >
       <fa-icon
         [icon]="['fas', 'arrow-left-long']"
         class="c-pointer close-icon me-2"
         title="Back"
       />Back
     </button>
-    <button (click)="nextPageSearch()" class="btn btn-primary d-flex align-items-center">
+    <!-- <button
+      (click)="nextPageSearch()"
+      class="btn btn-primary d-flex align-items-center"
+    >
       Next
       <fa-icon
         [icon]="['fas', 'arrow-right-long']"
         class="c-pointer close-icon ms-2"
         title="Next"
       />
-    </button>
+    </button> -->
   </div>
 </ng-container>

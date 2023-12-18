@@ -38,7 +38,7 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
   selectedFile: File;
   userId = '';
   profileId = '';
-  originUrl = environment.webUrl + 'community/';
+  originUrl = environment.webUrl + 'health-practitioner/';
   logoImg: any = {
     file: null,
     url: '',
@@ -185,7 +185,7 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
                 'Your Health Practitioner will be approved within 24 hours!'
               );
               this.activeModal.close('success');
-              this.router.navigate(['/communities']);
+              this.router.navigate(['/health-practitioner']);
             }
           },
           error: (err) => {

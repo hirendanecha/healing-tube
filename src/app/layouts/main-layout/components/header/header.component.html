@@ -62,11 +62,11 @@
           <fa-icon [icon]="['fas', 'magnifying-glass']" class="me-1" />
           <input
             type="text"
+            id="search"
             name="search"
             placeholder="Search"
             [(ngModel)]="searchText"
-            autocomplete="off"
-            (keyup)="getUserList()"
+            (input)="getUserList()"
           />
         </div>
 

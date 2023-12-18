@@ -6,15 +6,15 @@ import { CommunityService } from 'src/app/@shared/services/community.service';
 import { ToastService } from 'src/app/@shared/services/toast.service';
 
 @Component({
-  selector: 'app-community-card',
-  templateUrl: './community-card.component.html',
-  styleUrls: ['./community-card.component.scss']
+  selector: 'app-health-partitioner-card',
+  templateUrl: './health-partitioner-card.component.html',
+  styleUrls: ['./health-partitioner-card.component.scss'],
 })
-export class CommunityCardComponent {
-
-  @Input('community') community: any = {}
+export class HealthPraatitionerCardComponent {
+  @Input('community') community: any = {};
   @Input('type') type: string = '';
-  @Output('getCommunities') getCommunities: EventEmitter<void> = new EventEmitter<void>();
+  @Output('getCommunities') getCommunities: EventEmitter<void> =
+    new EventEmitter<void>();
 
   profileId: number = null;
 
@@ -54,7 +54,7 @@ export class CommunityCardComponent {
         if (res) {
           this.goToCommunityDetailPage();
         }
-      }
+      },
     });
   }
 
@@ -71,19 +71,25 @@ export class CommunityCardComponent {
       actionObs = this.communityService.deleteCommunity(this.community?.Id);
     } else {
       actionType = 'Leave';
-      actionObs = this.communityService.removeFromCommunity(this.community?.Id, this.profileId);
+      actionObs = this.communityService.removeFromCommunity(
+        this.community?.Id,
+        this.profileId
+      );
     }
 
     modalRef.componentInstance.title = `${actionType} ${this.community.pageType}`;
     modalRef.componentInstance.confirmButtonLabel = actionType;
-    modalRef.componentInstance.message = `Are you sure want to ${actionType.toLowerCase()} this ${this.community.pageType}?`;
+    modalRef.componentInstance.message = `Are you sure want to ${actionType.toLowerCase()} this ${this.community.pageType
+      }?`;
 
     modalRef.result.then((res) => {
       if (res === 'success') {
         actionObs.subscribe({
           next: (res: any) => {
             if (res) {
-              this.toastService.success(`${this.community?.pageType} ${res.message} `);
+              this.toastService.success(
+                `${this.community?.pageType} ${res.message} `
+              );
               this.getCommunities?.emit();
             }
           },

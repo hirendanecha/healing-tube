@@ -22,7 +22,7 @@ export class NotificationsComponent {
   ) { 
     const data = {
       title: 'HealingTube Notification',
-      url: `${location.href}`,
+      url: `${window.location.href}`,
       description: '',
     };
     this.seoService.updateSeoMetaData(data);

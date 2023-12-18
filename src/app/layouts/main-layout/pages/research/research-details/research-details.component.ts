@@ -39,7 +39,7 @@ export class ResearchDetailsComponent {
           this.groupDetails = res;
           const data = {
             title: `HealingTube Research ${this.groupDetails?.PageTitle}`,
-            url: `${location.href}`,
+            url: `${window.location.href}`,
             description: this.groupDetails?.PageDescription,
             image: this.groupDetails?.CoverPicName || this.groupDetails?.ProfilePicName
           };

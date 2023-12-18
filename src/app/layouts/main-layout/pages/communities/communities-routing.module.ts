@@ -9,7 +9,7 @@ const routes: Routes = [
     component: CommunitiesComponent,
   },
   {
-    path: 'add-pratitioner',
+    path: 'add-practitioner',
     component: AddCommunityModalComponent,
     data: {
       isShowRightSideBar: false

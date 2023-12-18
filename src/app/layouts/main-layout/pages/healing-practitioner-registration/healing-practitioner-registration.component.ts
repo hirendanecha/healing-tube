@@ -24,10 +24,11 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
 
   selectPractitionerPage: boolean;
 
-  selectedCard = '';
+  selectedCard: number;
   cards: any[] = [
     {
       title: 'Botanical Medicine',
+      id: 1,
       description: `Plant-based supplements, tinctures, and topical applications that
     assist the body in healing. These may include either western or
     oriental herbal formulas with time-honored traditional healing
@@ -35,11 +36,13 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
     },
     {
       title: 'Homeopathy',
+      id: 2,
       description: `Gentle effective therapy that utilizes a minute amount of a
     potentized substance to promote a beneficial healing response.`,
     },
     {
       title: 'Hydrotherapy',
+      id: 3,
       description: `An important healing modality in traditional naturopathic
     medicine. Hydrotherapy utilizes the therapeutic benefits of water.
     It includes application of cool or warm water in specialized
@@ -47,17 +50,20 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
     },
     {
       title: 'Nutritional Counseling',
+      id: 4,
       description: `Nutritional supplementation, dietary assessment, and advice in
     making the best food choices based on your unique health history
     and individual needs.`,
     },
     {
       title: 'Lifestyle Counseling',
+      id: 5,
       description: `Help in making new choices that are healthier for you physically,
     emotionally, and psychologically.`,
     },
     {
       title: 'Touch for Health',
+      id: 6,
       description: ` Touch for Health is a system of balancing posture, attitude and
     life energy to relieve stress, aches and pains, feel and function
     better, be more effective, clarify and achieve your goals and
@@ -69,6 +75,7 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
     },
     {
       title: `German New Medicine, Spiritual, Psychosomatic or related healing modalities`,
+      id: 7,
       description: `Various paradigms of medicine, that recognizes the profound
     effects of how an individual's consciousness is reflected in their
     health and well-being. It involves awakening the body's inherent
@@ -76,6 +83,8 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
     discoveries of Dr. med. Ryke Geerd Hamer`,
     },
   ];
+
+  isFromHome = false;
 
   constructor(
     private seoService: SeoService,
@@ -88,7 +97,10 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
   ) {
     const queryParams = this.route.snapshot.queryParams;
     const newParams = { ...queryParams };
-    // console.log(newParams)
+    console.log(this.router.routerState.snapshot.url);
+    this.selectPractitionerPage = this.router.routerState.snapshot.url.includes('request-video-call') || false;
+    this.isFromHome = this.router.routerState.snapshot.url.includes('request-video-call') || false;
+    console.log(this.selectPractitionerPage)
     // this.channelId = this.shareService?.channelData?.id;
     // this.route.queryParams.subscribe((params: any) => {
     //   console.log(params.channelId);
@@ -105,7 +117,7 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
     this.profileId = Number(localStorage.getItem('profileId'));
     const data = {
       title: 'HealingTube Registration',
-      url: `${location.href}`,
+      url: `${window.window.location.href}`,
       description: '',
     };
     this.seoService.updateSeoMetaData(data);
@@ -155,15 +167,16 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
       },
     });
   }
-  isSelected(title: string): boolean {
-    return this.selectedCard === title;
+  isSelected(id: number): boolean {
+    return this.selectedCard === id;
   }
 
-  selectCard(title: any): void {
-    if (this.selectedCard === title) {
+  selectCard(id: any): void {
+    if (this.selectedCard === id) {
       this.selectedCard = null;
     } else {
-      this.selectedCard = title;
+      this.selectedCard = id;
+      this.nextPageSearch();
     }
   }
 
@@ -177,7 +190,7 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
     this.selectPractitionerPage = !this.selectPractitionerPage;
   }
 
-  nextPageSearch(){
+  nextPageSearch() {
     if (this.selectedCard) {
       const practitionerRequirements = {
         selectedCard: this.selectedCard,
@@ -185,6 +198,7 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
         selectedState: this.selectedState,
       };
       console.log(practitionerRequirements);
+      this.router.navigate(['/health-practitioner'], { state: { data: practitionerRequirements } });
     } else {
       this.toastService.danger('Please select What emphasis are you interested in healing');
     }
