@@ -14,12 +14,15 @@
     @media (max-width: 767px) {
       max-width: 395px;
     }
+
     @media (max-width: 552px) {
       max-width: 340px;
     }
+
     @media (max-width: 494px) {
       max-width: 280px;
     }
+
     @media (max-width: 432px) {
       max-width: 220px;
     }
@@ -35,6 +38,7 @@
         content: attr(placeholder);
         color: #697495;
       }
+
       &:focus {
         &:before {
           content: "";
@@ -46,10 +50,46 @@
       max-height: 300px;
     }
   }
+  .select-emaojies {
+    position: absolute;
+    right: 0;
+    top: 5px;
+  
+    @media (min-width:768px) and (max-width:991px) {
+      right: 32px;
+    }
+  
+    @media (max-width: 575px) {
+      right: 52px;
+    }
+  
+    .dropdown-toggle {
+      &::after {
+        display: none;
+      }
+    }
+  
+    .emoji-select {
+      max-width: 60px;
+      min-width: 60px;
+     
+    }
+  
+    .emojiModelStyle {
+      width: 282px;
+      // height: 225px;
+  
+      .emoji-style {
+        width: 70px;
+      }
+    }
+}
+
 }
 
 ::ng-deep {
   .tag-input-div {
+
     div,
     h1,
     h2,
@@ -67,6 +107,7 @@
       color: var(--para-2nd-color) !important;
       font-weight: 500 !important;
     }
+
     // br {
     //   display: none;
     // }
@@ -74,24 +115,29 @@
       color: rgb(var(--bs-danger-rgb)) !important;
     }
   }
+
   .dropdown-menu.show {
     max-height: 292px;
   }
+
   mention-list {
     .mention-menu {
       width: 340px;
+
       .mention-item {
         padding: 8px;
       }
     }
   }
 
-  .tag-image-preview{
-    img{
+  .tag-image-preview {
+    img {
       display: none !important;
     }
   }
 }
+
 .tag-image-preview ::ng-deep img[src$=".gif"] {
   display: unset !important;
 }
+
