@@ -11,12 +11,14 @@ import { NgxSpinnerService } from 'ngx-spinner';
   styleUrls: ['./tag-user-input.component.scss']
 })
 export class TagUserInputComponent implements OnChanges, OnDestroy {
+[x: string]: any;
 
   @Input('value') value: string = '';
   @Input('placeholder') placeholder: string = 'ss';
   @Input('isShowMetaPreview') isShowMetaPreview: boolean = true;
   @Input('isAllowTagUser') isAllowTagUser: boolean = true;
   @Input('isShowMetaLoader') isShowMetaLoader: boolean = true;
+  @Input('isShowEmojis') isShowEmojis: boolean = false;
   @Output('onDataChange') onDataChange: EventEmitter<any> = new EventEmitter<any>();
 
   @ViewChild('tagInputDiv', { static: false }) tagInputDiv: ElementRef;
@@ -32,6 +34,30 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
 
   copyImage: any
 
+  emojiPaths = [
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Heart.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Nerd.gif'
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Cry.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Cool.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Anger.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Crazy.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Censorship.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Doctor.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Hug.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/In-Love.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Kiss.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/LOL.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Party.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Poop.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Sad.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Scholar.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Shock.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Sick.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Think.gif',
+    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Sleep.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Thumbs-UP.gif',
+    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Thumbs-down.gif',
+  ];
   constructor(
     private renderer: Renderer2,
     private customerService: CustomerService,
@@ -197,6 +223,13 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     this.emitChangeEvent();
     this.moveCursorToEnd();
   }
+  selectEmoji(emoji: any): void {
+    let htmlText = this.tagInputDiv?.nativeElement?.innerHTML || '';
+    const text = `${htmlText} <img src=${emoji} width="50" height="50">`;
+    this.setTagInputDivValue(text);
+    this.emitChangeEvent();
+    
+  }
 
   getUserList(search: string): void {
     this.customerService.getProfileList(search).subscribe({
@@ -250,6 +283,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
       });
     }
   }
+
 
   extractImageUrlFromContent(content: string): string | null {
     const contentContainer = document.createElement('div');

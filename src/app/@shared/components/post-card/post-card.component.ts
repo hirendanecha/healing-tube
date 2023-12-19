@@ -99,7 +99,7 @@ export class PostCardComponent implements OnInit {
   ) {
     this.profileId = localStorage.getItem('profileId');
     afterNextRender(() => {
-      
+
       if (this.post?.id && this.post?.posttype === 'V') {
         this.playVideo(this.post?.id);
       }
@@ -718,5 +718,11 @@ export class PostCardComponent implements OnInit {
       }
     }
     return null;
+  }
+  selectedEmoji(emoji) {
+    this.commentMessageInputValue =
+      this.commentMessageInputValue +
+      `<img src=${emoji} width="60" height="60">`;
+
   }
 }
