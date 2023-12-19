@@ -28,8 +28,7 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
   practitionerArea: any = [];
   selectedAreaValues: number[] = [];
 
-
-  selectedCard: number;
+  selectedCards: any[] = [];
   cards: any[] = [
     {
       title: 'Botanical Medicine',
@@ -103,10 +102,10 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
   ) {
     const queryParams = this.route.snapshot.queryParams;
     const newParams = { ...queryParams };
-    console.log(this.router.routerState.snapshot.url);
+    // console.log(this.router.routerState.snapshot.url);
     this.selectPractitionerPage = this.router.routerState.snapshot.url.includes('request-video-call') || false;
     this.isFromHome = this.router.routerState.snapshot.url.includes('request-video-call') || false;
-    console.log(this.selectPractitionerPage)
+    // console.log(this.selectPractitionerPage)
     // this.channelId = this.shareService?.channelData?.id;
     // this.route.queryParams.subscribe((params: any) => {
     //   console.log(params.channelId);
@@ -175,15 +174,15 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
     });
   }
   isSelected(id: number): boolean {
-    return this.selectedCard === id;
+    return this.selectedCards.includes(id);
   }
 
-  selectCard(id: any): void {
-    if (this.selectedCard === id) {
-      this.selectedCard = null;
+  selectCard(cardId: string): void {
+    const index = this.selectedCards.indexOf(cardId);
+    if (index === -1) {
+      this.selectedCards.push(cardId);
     } else {
-      this.selectedCard = id;
-      // this.nextPageSearch();
+      this.selectedCards = this.selectedCards.filter(id => id !== cardId);
     }
   }
 
@@ -198,15 +197,19 @@ export class HealingPractitionerRegistrationComponent implements OnInit {
   }
 
   nextPageSearch() {
-    if (this.selectedCard) {
+    if (this.selectedCards.length > 0) {
       const practitionerRequirements = {
-        selectedCard: this.selectedCard,
+        selectedCard: this.selectedCards,
         selectedCountry: this.selectedCountry,
         selectedState: this.selectedState,
         selectedAreas: this.selectedAreaValues
       };
       this.router.navigate(['/health-practitioner'], { state: { data: practitionerRequirements } });
-    } else {
+    } else if (this.isWorldwideChecked && this.selectedCards.length <= 0) {
+      const areaValues = { selectedAreas: this.selectedAreaValues } 
+      this.router.navigate(['/health-practitioner'], { state: { data: areaValues } });
+    }
+    else {
       this.toastService.danger('Please select What emphasis are you interested in healing');
     }
   }
