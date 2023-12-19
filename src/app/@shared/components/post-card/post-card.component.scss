@@ -7,7 +7,6 @@
   .post-item {
     max-width: 650px;
   }
-
   .post-single-box {
     background: var(--section-1st-color);
     box-shadow: var(--box-shadow);
@@ -18,12 +17,10 @@
         display: none;
       }
     }
-
     .c-padding {
       padding: 10px 0;
       // white-space: nowrap;
     }
-
     .hover-box-container {
       min-width: 267px;
       min-height: 125px;
@@ -45,28 +42,23 @@
         font-weight: 600;
         white-space: nowrap;
       }
-
       ::ng-deep svg path {
         fill: var(--para-2nd-color);
       }
     }
-
     .hover-box-container.show {
       // display: block;
       display: unset;
       opacity: 1;
     }
-
     .post-description {
       p {
         h1 {
           font-size: 18px;
         }
       }
-
       // line-break: anywhere;
     }
-
     .pdf-container {
       overflow-x: hidden !important;
     }
@@ -114,11 +106,9 @@
       @media (max-width: 450px) {
         max-width: 200px;
       }
-
       @media (min-width: 450px) and (max-width: 575px) {
         max-width: 275px;
       }
-
       @media (min-width: 575px) and (max-width: 85px) {
         max-width: 350px;
       }
@@ -139,7 +129,6 @@
           content: attr(placeholder);
           color: #697495;
         }
-
         &:focus {
           &:before {
             content: "";
@@ -165,29 +154,24 @@
     .post-description {
       white-space: pre-wrap;
       max-width: 541px;
-
       p {
         h1 {
           font-size: 18px;
         }
       }
-
       .postlink {
         img {
           border-radius: 0.5rem;
         }
-
         h3 {
           font-size: 18px;
           margin-top: 10px;
         }
       }
     }
-
     .total-react-share {
       .like-count-section {
         cursor: pointer;
-
         ul {
           li {
             .active {
@@ -197,7 +181,6 @@
         }
       }
     }
-
     .like-comment-share {
       .like-button {
         .active {
@@ -205,14 +188,12 @@
         }
       }
     }
-
     .comments-area {
       .like-button {
         .active {
           color: var(--primary-color) !important;
         }
       }
-
       // .single-comment-area {
       //   .top-area {
       //     p {
@@ -224,23 +205,18 @@
 
     .post-img {
       width: 100% !important;
-
       .single {
         flex: 0 0 calc(50% - 6px);
-
         img {
           width: 100%;
         }
       }
     }
-
     .post-head {
       color: var(--para-2nd-color);
     }
-
     .avatar {
       position: relative;
-
       &::before {
         position: absolute;
         content: "";
@@ -252,67 +228,54 @@
         left: -4px;
       }
     }
-
     .top-area {
       .status {
         color: var(--para-1st-color);
       }
     }
-
     .description-item {
       ul {
         list-style-type: disc;
         margin-left: 18px;
-
         li {
           color: var(--heading-1st-color);
         }
       }
     }
-
     .friends-list {
       ul {
         margin-left: 5px;
       }
-
       li {
         margin-left: -5px;
       }
-
       p {
         color: var(--para-1st-color);
       }
     }
-
     .like-comment-share {
       border-top: 1px solid var(--bs-border-color);
       border-bottom: 1px solid var(--bs-border-color);
     }
-
     form {
       span {
         color: var(--para-1st-color);
       }
     }
-
     .comments-area {
       max-width: 548px;
-
       .top-area {
         background: var(--box-1st-color);
         border-radius: 10px;
       }
-
       .title-area {
         p {
           color: var(--para-3rd-color);
         }
       }
-
       .like-share {
         li {
           position: relative;
-
           &::before {
             position: absolute;
             content: "";
@@ -322,28 +285,23 @@
             background: var(--para-3rd-color);
             left: -15px;
           }
-
           &:first-child {
             &::before {
               display: none;
             }
           }
         }
-
         button {
           color: var(--para-2nd-color);
         }
       }
-
       .comment-form {
         display: none;
       }
-
       .single-comment-area {
         .parent-comment {
           .avatar-item {
             position: relative;
-
             &:before {
               content: "";
               background: var(--border-2nd-color);
@@ -355,10 +313,8 @@
             }
           }
         }
-
         .sibling-comment {
           position: relative;
-
           &:before {
             content: "";
             background: var(--border-2nd-color);
@@ -371,11 +327,9 @@
           }
         }
       }
-
       .comment-item-nested {
         .avatar-item {
           position: relative;
-
           &:before {
             content: "";
             height: 40px;
@@ -392,31 +346,25 @@
         }
       }
     }
-
     .comment-form {
       margin-top: 24px;
     }
   }
-
-  .custom-width-comment {
-    max-width: 430px;
-
-    @media (max-width: 1399px) {
-      max-width: 250px;
-    }
-
-    @media (max-width: 1199px) {
-      max-width: 385px;
-    }
-
-    @media (max-width: 991px) {
-      max-width: 495px;
-    }
-
+  .custom-width-comment ::ng-deep app-tag-user-input {
+    // max-width: 385px;
+    max-width: 420px;
+    // @media (max-width: 1399px) {
+    //   max-width: 250px;
+    // }
+    // @media (max-width: 1199px) {
+    //   max-width: 315px;
+    // }
+    // @media (max-width: 991px) {
+    //   max-width: 495px;
+    // }
     @media (max-width: 767px) {
-      max-width: 352px;
+      max-width: 315px;
     }
-
     @media (max-width: 435px) {
       max-width: 206px;
     }
@@ -439,7 +387,6 @@
 
   ::ng-deep {
     .post-description {
-
       h1,
       h2,
       h3,
@@ -461,7 +408,6 @@
         font-weight: 500 !important;
         color: unset !important;
       }
-
       a {
         font-size: 16px !important;
         line-height: 22px !important;
@@ -469,7 +415,6 @@
         background-color: unset !important;
         font-weight: 500 !important;
       }
-
       img,
       svg {
         // max-width: 16px;
@@ -477,6 +422,10 @@
         display: none !important;
         vertical-align: middle;
         margin-right: 5px;
+      }
+      img[src$=".gif"] {
+        display: unset !important;
+        width: 70px;
       }
 
       // h1,h2,h3,h4,h5,h6 {
@@ -487,9 +436,7 @@
       //   }
       // }
     }
-
     .comments-area {
-
       h1,
       h2,
       h3,
@@ -505,25 +452,21 @@
         margin: unset;
         background-color: unset !important;
       }
-
       p,
       em,
       span {
         color: var(--para-2nd-color) !important;
       }
-
       .comment-description {
         img {
           display: none !important;
         }
       }
     }
-
     .emoji-select {
       max-width: 60px;
       min-width: 60px;
     }
-
     .emojiModelStyle {
       width: 282px;
       // height: 225px;
@@ -532,46 +475,47 @@
         width: 70px;
       }
     }
-
-    .comment-emoji {
+    .comment-emoji{
       .select-emaojies {
-        right: 45px !important;
-        top: 5px !important;
+        right: 50px !important;
 
         @media (min-width:768px) and (max-width:991px) {
-          right: 110px;
+          right: 115px !important;
         }
-
         @media (min-width:576px) and (max-width:767px) {
           right: 80px !important;
         }
-
         @media (min-width:545px) and (max-width:575px) {
-          right: 50px !important;
+          right: 115px !important;
         }
-
-        @media (min-width:500px) and (max-width:544px) {
-          right: 75px !important;
+        @media (min-width:515px) and (max-width:544px) {
+          right: 90px !important;
         }
-
-        @media (min-width:460px) and (max-width:494px) {
-          right: 40px !important;
+        @media (min-width:420px) and (max-width:435px) {
+          right: 100px !important;
         }
-
-        @media (min-width:400px) and (max-width:435px) {
-          right: 50px !important;
+        @media (min-width:400px) and (max-width:419px) {
+          right: 70px !important;
         }
       }
     }
+    .replay-comment-emoji{
+      .tag-input-div{
+        max-width: 350px !important;
 
-    .replay-comment-emoji {
+        @media (max-width:510px) {
+          max-width: 274px !important;
+        }
+        @media (max-width:431px) {
+          max-width: 200px !important;
+        }
+      }
       .select-emaojies {
         right: 50px !important;
         top: 5px !important;
       }
     }
   }
-  
   .comment-description ::ng-deep img[src$=".gif"] {
     display: unset !important;
     width: 70px;

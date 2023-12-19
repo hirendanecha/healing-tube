@@ -71,6 +71,7 @@ export class PostCardComponent implements OnInit {
   isExpand = false;
   commentCount = 0;
   commentMessageInputValue: string = '';
+  replaycommentMessageInputValue: string = '';
   commentMessageTags: any[];
   showHoverBox = false;
   unSubscribeProfileIds: any = [];
@@ -105,10 +106,6 @@ export class PostCardComponent implements OnInit {
       }
       this.socketListner();
       this.viewComments(this.post?.id);
-
-      this.descriptionimageUrl = this.extractImageUrlFromContent(
-        this.post.postdescription
-      );
       // const contentContainer = document.createElement('div');
       // contentContainer.innerHTML = this.post.postdescription;
       // const imgTag = contentContainer.querySelector('img');
@@ -130,9 +127,12 @@ export class PostCardComponent implements OnInit {
     // if (this.post?.posttype === 'V') {
     //   this.playVideo(this.post?.id);
     // }
+    this.descriptionimageUrl = this.extractImageUrlFromContent(
+      this.post.postdescription
+    );
     const path = this.route.snapshot.routeConfig.path;
     if (path === 'view-profile/:id' || path === 'post/:id') {
-      this.shareButton = true
+      this.shareButton = true;
     }
   }
   getPostUrl(post: any) {
@@ -367,7 +367,7 @@ export class PostCardComponent implements OnInit {
               ele.descImg = this.extractImageUrlFromContent(ele.comment);
             });
 
-            console.log(res.data.commmentsList);
+            // console.log(res.data.commmentsList);
             this.commentList = res.data.commmentsList.map((ele: any) => ({
               ...ele,
               replyCommnetsList: res.data.replyCommnetsList.filter(
@@ -499,6 +499,7 @@ export class PostCardComponent implements OnInit {
                 this.commentData['imageUrl'] = res?.body?.url;
                 this.addComment();
                 this.commentMessageInputValue = null;
+                this.replaycommentMessageInputValue = null;
               }
             },
             error: (err) => {
@@ -508,6 +509,7 @@ export class PostCardComponent implements OnInit {
       } else {
         this.addComment();
         this.commentMessageInputValue = null;
+        this.replaycommentMessageInputValue = null;
       }
     }
   }
@@ -598,11 +600,15 @@ export class PostCardComponent implements OnInit {
   }
 
   onTagUserInputChangeEvent(data: any): void {
-    // console.log('comments-data', data)
     this.commentData.comment = data?.html;
     this.commentData.meta = data?.meta;
     this.commentMessageTags = data?.tags;
     // console.log(this.commentData)
+  }
+  onTagUserReplayInputChangeEvent(data: any): void {
+    this.commentData.comment = data?.html;
+    this.commentData.meta = data?.meta;
+    this.commentMessageTags = data?.tags;
   }
 
   socketListner(): void {
@@ -712,13 +718,17 @@ export class PostCardComponent implements OnInit {
     if (imgTag) {
       const imgTitle = imgTag.getAttribute('title');
       const imgStyle = imgTag.getAttribute('style');
-      const imageGif = imgTag.getAttribute('src').toLowerCase().endsWith('.gif');
+      const imageGif = imgTag
+        .getAttribute('src')
+        .toLowerCase()
+        .endsWith('.gif');
       if (!imgTitle && !imgStyle && !imageGif) {
         return imgTag.getAttribute('src');
       }
     }
     return null;
   }
+
   selectedEmoji(emoji) {
     this.commentMessageInputValue =
       this.commentMessageInputValue +
