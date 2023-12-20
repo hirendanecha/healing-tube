@@ -58,7 +58,7 @@ export class HeaderComponent {
       if (data?.profileId) {
         this.sharedService.isNotify = false;
         localStorage.setItem('isRead', data?.isRead);
-        this.originalFavicon.href = '/assets/images/icon-unread.jpg';
+        this.originalFavicon.href = '/assets/images/default-profile.jpg';
       }
     });
     const isRead = localStorage.getItem('isRead');
