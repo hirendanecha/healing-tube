@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastService } from 'src/app/@shared/services/toast.service';
 import { CustomerService } from 'src/app/@shared/services/customer.service';
 import { SeoService } from 'src/app/@shared/services/seo.service';
+import { SocketService } from 'src/app/@shared/services/socket.service';
 
 @Component({
   selector: 'app-notification',
@@ -18,7 +19,8 @@ export class NotificationsComponent {
     private spinner: NgxSpinnerService,
     private router: Router,
     private toastService: ToastService,
-    private seoService: SeoService
+    private seoService: SeoService,
+    private socketService: SocketService
   ) { 
     const data = {
       title: 'HealingTube Notification',
@@ -26,6 +28,9 @@ export class NotificationsComponent {
       description: '',
     };
     this.seoService.updateSeoMetaData(data);
+    const profileId = +localStorage.getItem('profileId');
+    this.socketService.readNotification({ profileId }, (data) => {
+    });
   }
 
   ngOnInit(): void {
@@ -65,7 +70,7 @@ export class NotificationsComponent {
   readUnreadNotification(id, isRead): void {
     this.customerService.readUnreadNotification(id, isRead).subscribe({
       next: (res) => {
-        this.toastService.success(res.message);
+        this.toastService.success(res.message); 
         this.getNotificationList();
       },    
     });
