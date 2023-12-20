@@ -196,6 +196,8 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
                 };
 
                 this.emitChangeEvent();
+              } else {
+                this.metaData.metalink = url;
               }
 
               this.spinner.hide();
