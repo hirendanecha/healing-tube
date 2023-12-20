@@ -109,7 +109,7 @@ export class CustomerService {
 
   getNotification(id): Observable<any> {
     return this.http.get(
-      `${this.baseUrl}/notification/${id}`,
+      `${this.baseUrl}/notification/${id}&q=${Date.now()}`,
     );
   }
 }

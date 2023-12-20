@@ -5,6 +5,7 @@ import {
   OnDestroy,
   OnInit,
   PLATFORM_ID,
+  Renderer2,
   ViewChild,
 } from '@angular/core';
 import { NgbDropdown, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -24,12 +25,15 @@ import { environment } from 'src/environments/environment';
 import { SeoService } from 'src/app/@shared/services/seo.service';
 import { AddCommunityModalComponent } from '../communities/add-community-modal/add-community-modal.component';
 import { AddFreedomPageComponent } from '../freedom-page/add-page-modal/add-page-modal.component';
+import { Meta } from '@angular/platform-browser';
+// import { MetafrenzyService } from 'ngx-metafrenzy';
 import { isPlatformBrowser } from '@angular/common';
 import { Howl } from 'howler';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  // providers: [MetafrenzyService]
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   postMessageInputValue: string = '';
@@ -60,7 +64,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   pdfName: string = '';
   notificationId: number;
   buttonClicked = false;
-  notificationSoundOct = ''
 
   constructor(
     private modalService: NgbModal,
@@ -75,6 +78,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     public tokenService: TokenStorageService,
     private seoService: SeoService,
+    // private metafrenzyService: MetafrenzyService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     if (isPlatformBrowser(this.platformId)) {
@@ -111,38 +115,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.socketService.socket?.connected) {
       this.socketService.socket?.connect();
     }
-    this.socketService.socket?.emit('join', { room: this.profileId });
-    this.socketService.socket?.on('notification', (data: any) => {
-      if (data) {
-        this.notificationId = data.id;
-        this.sharedService.isNotify = true;
-        if (data?.actionType === 'T') {
-          var sound = new Howl({
-            src: ['https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3']
-          });
-          this.notificationSoundOct = localStorage?.getItem('notificationSoundEnabled');
-          if (this.notificationSoundOct !== 'N') {
-            if (sound) {
-              sound?.play();
-            }
-          }
-        }
-        if (this.notificationId) {
-          this.customerService.getNotification(this.notificationId).subscribe({
-            next: (res) => {
-              localStorage.setItem('isRead', res.data[0]?.isRead);
-            },
-            error: (error) => {
-              console.log(error);
-            },
-          });
-        }
-      }
-    });
-    const isRead = localStorage.getItem('isRead');
-    if (isRead === 'N') {
-      this.sharedService.isNotify = true;
-    }
     this.socketService.socket?.on(
       'new-post-added',
       (res: any) => {
@@ -160,6 +132,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onPostFileSelect(event: any): void {
     const file = event.target?.files?.[0] || {};
+    // console.log(file)
     if (file.type.includes('application/pdf')) {
       this.postData['file'] = file;
       this.pdfName = file?.name;
@@ -171,6 +144,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.pdfName = null;
       this.postData['pdfUrl'] = null;
     }
+    // if (file?.size < 5120000) {
+    // } else {
+    //   this.toastService.warring('Image is too large!');
+    // }
   }
 
   removePostSelectedFile(): void {
@@ -193,6 +170,20 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
               description: details.CommunityDescription,
               image: details?.coverImg,
             };
+            // this.metafrenzyService.setTitle(data.title);
+            // this.metafrenzyService.setMetaTag('og:title', data.title);
+            // this.metafrenzyService.setMetaTag('og:description', data.description);
+            // this.metafrenzyService.setMetaTag('og:url', data.url);
+            // this.metafrenzyService.setMetaTag('og:image', data.image);
+            // this.metafrenzyService.setMetaTag("og:site_name", 'Freedom.Buzz');
+            // this.metafrenzyService.setOpenGraph({
+            //   title: data.title,
+            //   //description: post.postToProfileIdName === '' ? post.profileName: post.postToProfileIdName,
+            //   description: data.description,
+            //   url: data.url,
+            //   image: data.image,
+            //   site_name: 'Freedom.Buzz'
+            // });
             this.seoService.updateSeoMetaData(data);
 
             if (details?.memberList?.length > 0) {
@@ -319,6 +310,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onTagUserInputChangeEvent(data: any): void {
+    // this.postMessageInputValue = data?.html
     this.postData.postdescription = data?.html;
     this.postData.meta = data?.meta;
     this.postMessageTags = data?.tags;
@@ -385,7 +377,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     modalRef.result.then((res) => {
       if (res === 'success') {
         if (data.pageType === 'community') {
-          this.router.navigate(['/health-practitioner']);
+          this.router.navigate(['health-practitioner']);
         } else {
           this.router.navigate(['pages']);
         }
