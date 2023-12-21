@@ -73,6 +73,6 @@ export class NotificationsComponent {
         this.toastService.success(res.message); 
         this.getNotificationList();
       },    
-    });
+      });
   }
 }
