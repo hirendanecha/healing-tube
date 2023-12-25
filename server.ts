@@ -86,7 +86,7 @@ export function app(): express.Express {
         var seo: any = {
           title: 'Healing Tube',
           description:
-            'The Umbrella platform for All freedom based projects worldwide',
+            'Private video consultations with Naturopathic Doctors and Holistic Healers from around the world. Social Discussion on how to heal various ailments.',
           image:
             'https://www.healing.tube/assets/images/Healing-Tube-Logo.png',
           site: 'https://www.healing.tube/',
