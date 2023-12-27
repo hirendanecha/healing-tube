@@ -88,7 +88,7 @@ export function app(): express.Express {
           description:
             'Private video consultations with Naturopathic Doctors and Holistic Healers from around the world. Social Discussion on how to heal various ailments.',
           image:
-            'https://www.healing.tube/assets/images/Healing-Tube-Logo.png',
+            'https://www.healing.tube/assets/images/Ht-Profile-pic-default.png',
           site: 'https://www.healing.tube/',
           url: 'https://www.healing.tube' + params,
           keywords: 'HealingTube',
@@ -155,7 +155,7 @@ export function app(): express.Express {
           const talent = {
             name: post?.title || post?.albumname || 'Healing.Tube Post',
             description: pdhtml?.textContent || 'Post content',
-            image: post?.thumbfilename || post?.metaimage || post?.imageUrl || 'https://www.healing.tube/assets/images/Healing-Tube-Logo.png',
+            image: post?.thumbfilename || post?.metaimage || post?.imageUrl || 'https://www.healing.tube/assets/images/Ht-Profile-pic-default.png',
           };
           seo.title = talent.name;
           seo.description = strip_html_tags(talent.description);
