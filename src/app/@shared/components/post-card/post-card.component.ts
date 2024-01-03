@@ -105,7 +105,7 @@ export class PostCardComponent implements OnInit {
         this.playVideo(this.post?.id);
       }
       this.socketListner();
-      this.viewComments(this.post?.id);
+      // this.viewComments(this.post?.id);
       // const contentContainer = document.createElement('div');
       // contentContainer.innerHTML = this.post.postdescription;
       // const imgTag = contentContainer.querySelector('img');
@@ -120,7 +120,7 @@ export class PostCardComponent implements OnInit {
 
   ngOnInit(): void {
     // this.socketListner();
-    // this.viewComments(this.post?.id);
+    this.viewComments(this.post?.id);
   }
 
   ngAfterViewInit(): void {
