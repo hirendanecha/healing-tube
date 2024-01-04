@@ -19,6 +19,7 @@
     background-image: url(/assets/images/landingpage/healing-hm-pg.jpg);
     background-size: cover;
     background-repeat: no-repeat;
+    background-position: center;
     object-fit: cover;
     height: calc(100vh - 48px);
     min-height: 400px;
@@ -29,7 +30,7 @@
       background-color: #0b0d0ed4;
       border-radius: 5px;
       padding: 40px;
-      height: 300px;
+      // height: 300px;
     }
 
     @media (max-width: 600px) {
