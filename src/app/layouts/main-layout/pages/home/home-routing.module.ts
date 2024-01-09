@@ -15,7 +15,7 @@ const routes: Routes = [
     component: HomeComponent,
   },
   {
-    path: 'health-practitioner/:name',
+    path: 'health-practitioner/details/:name',
     component: HomeComponent,
     canActivate: mapToCanActivate([AuthenticationGuard]),
    
