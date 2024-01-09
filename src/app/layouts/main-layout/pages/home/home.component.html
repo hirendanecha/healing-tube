@@ -38,43 +38,44 @@
             </button>
           </ng-container>
           <!-- {{ communityDetails?.pageType }} -->
+          <ng-container *ngIf="communityDetails?.pageType === 'page'">
+            <ng-container
+              *ngIf="
+                communityDetails?.memberIds?.includes(+profileId);
+                else elseJoinCommunity
+              "
+            >
+              <!-- <ng-container
+              *ngIf="
+                communityDetails?.profileId === +profileId;
+                else elseLeaveCommunity
+              "
+            >
+              <button class="btn btn-sm btn-danger" (click)="deleteCommunity()">
+                Delete {{ communityDetails?.pageType }}
+              </button>
+            </ng-container> -->
 
-          <ng-container
-            *ngIf="
-              communityDetails?.memberIds?.includes(+profileId);
-              else elseJoinCommunity
-            "
-          >
-            <!-- <ng-container
-            *ngIf="
-              communityDetails?.profileId === +profileId;
-              else elseLeaveCommunity
-            "
-          >
-            <button class="btn btn-sm btn-danger" (click)="deleteCommunity()">
-              Delete {{ communityDetails?.pageType }}
-            </button>
-          </ng-container> -->
+              <ng-template #elseLeaveCommunity>
+                <button
+                  class="btn btn-sm btn-danger"
+                  (click)="removeFromCommunity()"
+                >
+                  Leave {{ communityDetails?.pageType }}
+                </button>
+              </ng-template>
+            </ng-container>
 
-            <ng-template #elseLeaveCommunity>
+            <ng-template #elseJoinCommunity>
               <button
-                class="btn btn-sm btn-danger"
-                (click)="removeFromCommunity()"
+                class="btn btn-sm btn-success"
+                (click)="joinCommunity()"
+                [disabled]="buttonClicked"
               >
-                Leave {{ communityDetails?.pageType }}
+                Join {{ communityDetails?.pageType }}
               </button>
             </ng-template>
           </ng-container>
-
-          <ng-template #elseJoinCommunity>
-            <button
-              class="btn btn-sm btn-success"
-              (click)="joinCommunity()"
-              [disabled]="buttonClicked"
-            >
-              Join {{ communityDetails?.pageType }}
-            </button>
-          </ng-template>
         </div>
       </div>
     </div>
@@ -287,6 +288,64 @@
 
   <ng-container *ngIf="isNavigationEnd">
     <ng-container *ngIf="communitySlug && communityDetails?.Id">
+      <div
+        *ngIf="communityDetails?.pageType === 'community'"
+        class="single-box filter-single-box text-start p-5 p-md-3 align-items-center gap-4"
+      >
+        <div class="avatar-area d-flex align-items-center gap-3 float-end">
+          <!-- <img loading="lazy" class="w-48-px h-48-px rounded-3 shadow-none" data-src="{{ community?.logoImg }}"
+          onerror="this.onerror=null;this.src='/assets/images/avtar/placeholder-user.png';" alt="avatar" /> -->
+          <button
+            class="btn btn-sm btn-primary"
+            (click)="openAppointmentPopUp()"
+          >
+            <fa-icon class="c-icon-color" [icon]="['fas', 'phone']" />
+            Request Call
+          </button>
+        </div>
+        <div class="d-flex mt-2">
+          <fa-icon [icon]="['fas', 'globe']" class="eye-icon"></fa-icon>
+          <span class="ms-1"
+            >{{ communityDetails.Country }},{{ communityDetails.State }},{{
+              communityDetails.County
+            }},{{ communityDetails.City }}</span
+          >
+        </div>
+        <div class="d-flex mt-2 align-items-center">
+          <div class="d-flex flex-row align-items-center label">
+            <fa-icon
+              [icon]="['fas', 'circle']"
+              class="eye-icon font-14-px"
+            ></fa-icon>
+            <span class="ms-1 w-152-px">Emphasis of Healing:</span>
+          </div>
+          <div class="d-flex flex-row flex-wrap gap-2 ms-5">
+            <div
+              class="smtxt category-card"
+              *ngFor="let item of communityDetails?.emphasis"
+            >
+              {{ item.name }}
+            </div>
+          </div>
+        </div>
+        <div class="d-flex mt-2 align-items-center">
+          <div class="d-flex flex-row align-items-center label">
+            <fa-icon
+              [icon]="['fas', 'circle']"
+              class="eye-icon font-14-px"
+            ></fa-icon>
+            <span class="ms-1 w-152-px">Areas of Healing:</span>
+          </div>
+          <div class="d-flex flex-row flex-wrap gap-2 ms-5">
+            <div
+              class="smtxt category-card"
+              *ngFor="let item of communityDetails.areas"
+            >
+              {{ item.name }}
+            </div>
+          </div>
+        </div>
+      </div>
       <app-post-list
         parentComponent="HomeComponent"
         [communityId]="communityDetails?.Id"
@@ -306,7 +365,7 @@
 <ng-container
   *ngIf="activeCommunityTab === 2 && communityDetails?.memberList?.length > 0"
 >
-  <ng-container *ngIf="communityDetails?.adminIds.includes(+profileId)">
+  <ng-container *ngIf="communityDetails?.adminIds?.includes(+profileId)">
     <span> Add new admin: </span>
     <div class="input-area h-48-px d-flex align-items-center mb-3">
       <fa-icon [icon]="['fas', 'magnifying-glass']" class="me-1" />

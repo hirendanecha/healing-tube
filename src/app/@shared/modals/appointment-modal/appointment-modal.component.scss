@@ -1,0 +1,33 @@
+:host {
+  ngb-datepicker {
+    border-bottom: 1px solid var(--bs-border-color);
+    border-radius: 5px;
+    color: var(--para-2nd-color);
+  }
+  .slot-box {
+    width: 250px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid;
+    background-color: var(--box-1st-color);
+  }
+  .active {
+    background-color: var(--primary-color) !important;
+  }
+}
+::ng-deep {
+  .ngb-dp-header {
+    background-color: var(--box-1st-color) !important;
+  }
+  .ngb-dp-week {
+    background-color: var(--box-1st-color) !important;
+  }
+
+  [ngbDatepickerDayView]:hover:not(.bg-primary),
+  [ngbDatepickerDayView].active:not(.bg-primary) {
+    background-color: var(--btn-1st-color) !important;
+  }
+  .text-muted {
+    color: var(--para-1st-color) !important;
+  }
+}

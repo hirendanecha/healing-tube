@@ -1,0 +1,51 @@
+<div class="modal-header">
+  <h5 class="text-start m-0">{{ title }}</h5>
+  <fa-icon
+    [icon]="['fas', 'xmark']"
+    class="font-20-px"
+    role="button"
+    (click)="activeModal.close()"
+  />
+</div>
+<div class="modal-body text-center">
+  <div
+    class="mid-area d-md-flex d-block justify-content-around align-items-center"
+  >
+    <div class="w-md-50 w-100">
+      <ngb-datepicker
+        #d1
+        [(ngModel)]="model"
+        #c1="ngModel"
+        (ngModelChange)="selectDate()"
+        [startDate]="{
+          year: currentYear,
+          month: currentMonth,
+          day: currentDate
+        }"
+        [minDate]="{ year: currentYear, month: currentMonth, day: currentDate }"
+      />
+    </div>
+    <div class="w-md-50 w-100">
+      <label for="">Time Slots</label>
+      <div class="h-300-px overflow-auto">
+        <span
+          class="slot-box mt-1 mb-1"
+          *ngFor="let time of timeSlot; let i = index"
+          (click)="selectTime(time, i)"
+          [ngClass]="index === i ? 'active' : ''"
+          >{{ time }}</span
+        >
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer justify-content-end">
+  <button
+    id="common-filter-cancel"
+    type="button"
+    class="cmn-btn alt p-2"
+    (click)="activeModal.close(cancelButtonLabel)"
+  >
+    {{ cancelButtonLabel }}
+  </button>
+</div>

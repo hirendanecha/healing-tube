@@ -30,6 +30,7 @@ import { Meta } from '@angular/platform-browser';
 import { isPlatformBrowser } from '@angular/common';
 import { Howl } from 'howler';
 import { EditPostModalComponent } from 'src/app/@shared/modals/edit-post-modal/edit-post-modal.component';
+import { AppointmentModalComponent } from 'src/app/@shared/modals/appointment-modal/appointment-modal.component';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -648,5 +649,20 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.postData['postdescription'] = content;
     }
+  }
+
+  openAppointmentPopUp(): void {
+    const modalRef = this.modalService.open(AppointmentModalComponent, {
+      centered: true,
+      size: 'lg'
+    });
+    modalRef.componentInstance.title = `Appointment Date & Time`;
+    modalRef.componentInstance.confirmButtonLabel = 'Ok';
+    modalRef.componentInstance.cancelButtonLabel = 'Cancel';
+    modalRef.result.then((res) => {
+      if (res === 'success') {
+        // this.openUploadVideoModal();
+      }
+    });
   }
 }

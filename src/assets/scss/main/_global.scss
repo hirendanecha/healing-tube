@@ -340,6 +340,9 @@ option {
   font-weight: 300;
   overflow-wrap: anywhere;
 }
+option {
+  background-color: var(--box-1st-color);
+}
 
 fa-icon svg path {
   fill: var(--font-icon-color);
