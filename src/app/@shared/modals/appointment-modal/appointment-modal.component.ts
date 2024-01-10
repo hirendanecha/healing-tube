@@ -102,6 +102,8 @@ export class AppointmentModalComponent {
     },
   ];
 
+  practitioner = 'Health Practitioner'
+
   constructor(
     public activeModal: NgbActiveModal,
     private ngbCalendar: NgbCalendar,

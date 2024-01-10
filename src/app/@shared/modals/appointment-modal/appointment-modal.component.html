@@ -57,13 +57,24 @@
     />
   </div>
   <div class="modal-body text-center">
-    <div class="font-20-px card-text">You have requested a video call with < practitioner >  on < date >.<br>
-      < pracititioner > contact info is inclused within the email.<br>
-      You have been sent a email with the appoinment date, please mark this on your calendar
-      and please do not forget to attend!<br>
-      Sincer thank you and best health to you.<br>
-      Healing.tube
-      <a href="mailto:support@healing.tube">{{'support@healing.tube'}}</a>
+    <div class="font-20-px card-text">
+      <div class="mb-4">
+        You have requested a video call with <b>{{ practitioner }}</b> on <b>{{ selectedDateSlot }}</b>.
+      </div>
+      <div class="mb-4">
+        <b>{{ practitioner }}</b> contact info is inclused within the email.
+      </div>
+      <div class="mb-4">
+        You have been sent a email with the appoinment date, please mark this on your calendar
+        and please do not forget to attend!
+      </div>
+      <div class="mb-4">
+        Sincer thank you and best health to you.
+      </div>
+      <div>
+        Healing.tube
+        <a href="mailto:support@healing.tube">{{'support@healing.tube'}}</a>
+      </div>
     </div>
     <!-- <div class="d-flex justify-content-center mt-5">
       <div class="d-flex flex-wrap justify-content-center">
