@@ -161,21 +161,25 @@ export class AppointmentModalComponent {
       this.selectedCards = [cardId];
     } else {
       this.selectedCards = [];
+      this.totalAmt = null;
     }
   }
 
   feturedSelectCard(cardId: string, amt: number): void {
-    if (amt) {
-      this.totalAmt = this.totalAmt + amt;
-    }
+    // if (amt) {
+    //   this.totalAmt = this.totalAmt + amt;
+    // }
     const index = this.selectedCards.indexOf(cardId);
     if (index === -1) {
       this.selectedCards.push(cardId);
+      // this.totalAmt = this.totalAmt + amt;
+      this.totalAmt = isNaN(this.totalAmt) ? amt : this.totalAmt + amt;
     } else {
       this.selectedCards = this.selectedCards.filter((id) => id !== cardId);
+      this.totalAmt = this.totalAmt - amt;
     }
   }
-
+  
   backToApplication() {
     this.pricingPage = false;
   }
