@@ -90,7 +90,7 @@ export class AppointmentModalComponent {
       description: `A dedicated server provides an unlimited number of call time minutes.
       Pricing is dependent on the selected server.
       Please contact us for details.`,
-      pricing: `(auto email to sales@healing.tube)`,
+      pricing: `(Select and well contact you to discuss)`,
       rate: 0,
     },
     {
@@ -101,6 +101,8 @@ export class AppointmentModalComponent {
       rate: 100,
     },
   ];
+
+  practitioner = 'Health Practitioner'
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -138,7 +140,7 @@ export class AppointmentModalComponent {
   }
 
   async selectDate() {
-    this.timeSlot = await this.generateTimeSlots('09:00', '18:30', 15);
+    this.timeSlot = await this.generateTimeSlots('09:00', '17:00', 15);
   }
 
   selectTime(time, i): void {
@@ -161,21 +163,25 @@ export class AppointmentModalComponent {
       this.selectedCards = [cardId];
     } else {
       this.selectedCards = [];
+      this.totalAmt = null;
     }
   }
 
   feturedSelectCard(cardId: string, amt: number): void {
-    if (amt) {
-      this.totalAmt = this.totalAmt + amt;
-    }
+    // if (amt) {
+    //   this.totalAmt = this.totalAmt + amt;
+    // }
     const index = this.selectedCards.indexOf(cardId);
     if (index === -1) {
       this.selectedCards.push(cardId);
+      // this.totalAmt = this.totalAmt + amt;
+      this.totalAmt = isNaN(this.totalAmt) ? amt : this.totalAmt + amt;
     } else {
       this.selectedCards = this.selectedCards.filter((id) => id !== cardId);
+      this.totalAmt = this.totalAmt - amt;
     }
   }
-
+  
   backToApplication() {
     this.pricingPage = false;
   }
@@ -190,19 +196,20 @@ export class AppointmentModalComponent {
 
     if (selectedSlot && !this.pricingPage) {
       this.pricingPage = true;
-    } else if (selectedSlot.selectedCard.length > 0) {
-      console.log(selectedSlot);
-      const modalRef = this.modalService.open(OpenStripeComponent, {
-        centered: true,
-        backdrop: 'static',
-      });
-      modalRef.componentInstance.title = 'Pay Bill';
-      modalRef.componentInstance.confirmButtonLabel = 'Pay';
-      modalRef.componentInstance.cancelButtonLabel = 'Cancel';
-      modalRef.componentInstance.data = selectedSlot;
-      modalRef.result.then((res) => {});
-    } else {
-      this.toastService.danger('Please select your preference for billing.');
+    } else if (this.pricingPage) {
+      this.activeModal.close()
+      // console.log(selectedSlot);
+    //   const modalRef = this.modalService.open(OpenStripeComponent, {
+    //     centered: true,
+    //     backdrop: 'static',
+    //   });
+    //   modalRef.componentInstance.title = 'Pay Bill';
+    //   modalRef.componentInstance.confirmButtonLabel = 'Pay';
+    //   modalRef.componentInstance.cancelButtonLabel = 'Cancel';
+    //   modalRef.componentInstance.data = selectedSlot;
+    //   modalRef.result.then((res) => {});
+    // } else {
+    //   this.toastService.danger('Please select your preference for billing.');
     }
   }
 }

@@ -654,7 +654,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   openAppointmentPopUp(): void {
     const modalRef = this.modalService.open(AppointmentModalComponent, {
       centered: true,
-      size: 'xl'
+      size: 'lg'
     });
     modalRef.componentInstance.title = `Appointment Date & Time`;
     modalRef.componentInstance.confirmButtonLabel = 'Ok';

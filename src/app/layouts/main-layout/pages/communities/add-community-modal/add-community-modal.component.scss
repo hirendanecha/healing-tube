@@ -32,3 +32,29 @@
     margin-bottom: 5px;
   }
 }
+.card {
+  width: 235px;
+  background: var(--section-1st-color);
+  box-shadow: var(--box-shadow);
+  border-radius: 10px;
+  margin: 10px;
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px 20px;
+
+    .card-title{
+      border-bottom: 1px solid var(--font-icon-color);
+    }
+  }
+  .card-text {
+    color: var(--para-2nd-color);
+    font-size: 16px;
+    line-height: 22px;
+  }
+}
+.feture-card{
+  width: 100%;
+}

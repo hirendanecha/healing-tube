@@ -48,6 +48,85 @@
 </ng-container>
 <ng-container *ngIf="pricingPage">
   <div class="modal-header">
+    <h5 class="text-start m-0">Application submitted successfully</h5>
+    <fa-icon
+      [icon]="['fas', 'xmark']"
+      class="font-20-px"
+      role="button"
+      (click)="activeModal.close()"
+    />
+  </div>
+  <div class="modal-body">
+    <div class="font-20-px card-text px-sm-11">
+      <div class="mb-4">
+        You have requested a video call with <b>{{ practitioner }}</b> on <b>{{ selectedDateSlot | date:'MM-dd-yyyy' }}</b>.
+      </div>
+      <div class="mb-4">
+        <b>{{ practitioner }}</b> contact info is inclused within the email.
+      </div>
+      <div class="mb-4">
+        You have been sent a email with the appoinment date, please mark this on your calendar
+        and please do not forget to attend!
+      </div>
+      <div class="mb-4">
+        Sincer thank you and best health to you.
+      </div>
+      <div class="d-flex flex-column">
+        Healing.tube
+        <a class="mt-1" href="mailto:support@healing.tube">{{'support@healing.tube'}}</a>
+      </div>
+    </div>
+    <!-- <div class="d-flex justify-content-center mt-5">
+      <div class="d-flex flex-wrap justify-content-center">
+        <div *ngFor="let card of cards" class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title">{{ card.title }}</h5>
+            <p class="card-text">{{ card.description }}</p>
+            <h5>{{ card.pricing }}</h5>
+            <button (click)="selectCard(card.id, card.rate)">
+              <a
+                class="btn"
+                [ngClass]="isSelected(card.id) ? 'btn-success' : 'btn-primary'"
+              >
+                {{ isSelected(card.id) ? "Selected" : "Select" }}</a
+              >
+            </button>
+            <span class="font-12-px mt-2"
+              >Month to Month No Cancelation Fees & No Refunds</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-wrap justify-content-center">
+      <div
+        *ngFor="let featurCard of featuredCards"
+        class="card feture-card text-center"
+      >
+        <div class="card-body">
+          <h5 class="card-title">{{ featurCard.title }}</h5>
+          <p class="card-text">{{ featurCard.description }}</p>
+          <h5>{{ featurCard.pricing }}</h5>
+          <button (click)="feturedSelectCard(featurCard.id, featurCard.rate)">
+            <a
+              class="btn"
+              [ngClass]="
+                isSelected(featurCard.id) ? 'btn-success' : 'btn-primary'
+              "
+            >
+              {{ isSelected(featurCard.id) ? "Selected" : "Select" }}</a
+            >
+          </button>
+          <span class="font-12-px mt-2"
+            >Month to Month No Cancelation Fees & No Refunds</span
+          >
+        </div>
+      </div>
+    </div> -->
+  </div>
+</ng-container>
+<!-- <ng-container *ngIf="pricingPage">
+  <div class="modal-header">
     <h5 class="text-start m-0">Monthly Fees Charged to Practitioner</h5>
     <fa-icon
       [icon]="['fas', 'xmark']"
@@ -105,7 +184,7 @@
       </div>
     </div>
   </div>
-</ng-container>
+</ng-container> -->
 <div class="modal-footer justify-content-between">
   <ng-container *ngIf="!pricingPage; else backbtn">
     <button
@@ -141,7 +220,9 @@
       [disabled]="!nextBtn"
       (click)="nextToApplication()"
     >
-      Next<fa-icon
+      {{ pricingPage ? 'Ok' : 'Next' }}
+      <!-- Next -->
+      <fa-icon
         [icon]="['fas', 'arrow-right-long']"
         class="ms-2"
         title="Next"
