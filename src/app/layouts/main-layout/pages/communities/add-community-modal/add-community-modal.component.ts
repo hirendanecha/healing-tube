@@ -107,7 +107,7 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
       description: `A dedicated server provides an unlimited number of call time minutes.
       Pricing is dependent on the selected server.
       Please contact us for details.`,
-      pricing: `(auto email to sales@healing.tube)`,
+      pricing: `(Select and well contact you to discuss)`,
       rate: 0,
     },
     {

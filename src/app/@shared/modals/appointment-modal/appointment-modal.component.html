@@ -56,10 +56,10 @@
       (click)="activeModal.close()"
     />
   </div>
-  <div class="modal-body text-center">
-    <div class="font-20-px card-text">
+  <div class="modal-body">
+    <div class="font-20-px card-text px-sm-11">
       <div class="mb-4">
-        You have requested a video call with <b>{{ practitioner }}</b> on <b>{{ selectedDateSlot }}</b>.
+        You have requested a video call with <b>{{ practitioner }}</b> on <b>{{ selectedDateSlot | date:'MM-dd-yyyy' }}</b>.
       </div>
       <div class="mb-4">
         <b>{{ practitioner }}</b> contact info is inclused within the email.
@@ -71,9 +71,9 @@
       <div class="mb-4">
         Sincer thank you and best health to you.
       </div>
-      <div>
+      <div class="d-flex flex-column">
         Healing.tube
-        <a href="mailto:support@healing.tube">{{'support@healing.tube'}}</a>
+        <a class="mt-1" href="mailto:support@healing.tube">{{'support@healing.tube'}}</a>
       </div>
     </div>
     <!-- <div class="d-flex justify-content-center mt-5">
