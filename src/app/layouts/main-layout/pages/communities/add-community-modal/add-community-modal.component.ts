@@ -397,6 +397,7 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
   }
 
   clearForm(){
+    this.activeModal.close();
     this.router.navigate(['/health-practitioner'])
   }
 

@@ -1,4 +1,4 @@
-import { Component, Injectable, Input, inject } from '@angular/core';
+import { AfterViewInit, Component, Injectable, Input, inject } from '@angular/core';
 import {
   NgbActiveModal,
   NgbCalendar,
@@ -10,6 +10,8 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { ToastService } from '../../services/toast.service';
 import { OpenStripeComponent } from '../open-stripe/open-stripe.component';
+import { CustomerService } from '../../services/customer.service';
+import * as moment from 'moment';
 
 @Injectable()
 export class CustomAdapter extends NgbDateAdapter<string> {
@@ -40,11 +42,12 @@ export class CustomAdapter extends NgbDateAdapter<string> {
   styleUrls: ['./appointment-modal.component.scss'],
   providers: [{ provide: NgbDateAdapter, useClass: CustomAdapter }],
 })
-export class AppointmentModalComponent {
+export class AppointmentModalComponent implements AfterViewInit{
   @Input() cancelButtonLabel: string;
   @Input() confirmButtonLabel: string;
   @Input() title: string;
   @Input() closeIcon: boolean;
+  @Input() profileId: boolean;
   // model: string;
   timeSlot: any = [];
   today: any;
@@ -109,12 +112,19 @@ export class AppointmentModalComponent {
     private ngbCalendar: NgbCalendar,
     private dateAdapter: NgbDateAdapter<any>,
     public calendar: NgbCalendar,
+    private customerService: CustomerService,
     private toastService: ToastService,
     private modalService: NgbModal
   ) {
     this.today = this.dateAdapter.toModel(this.ngbCalendar.getToday())!;
     // console.log(this.today)
     // console.log(this.currentDate, this.currentMonth, this.currentYear,)
+  }
+
+  ngAfterViewInit(): void {
+    if (this.profileId) {
+      this.getProfile(this.profileId);
+    }
   }
 
   async generateTimeSlots(startTime, endTime, duration) {
@@ -187,29 +197,29 @@ export class AppointmentModalComponent {
   }
 
   nextToApplication() {
-    const selectedSlot = {
-      selectedDate: this.selectedDateSlot,
-      selectedTime: this.selectedTimeSlot,
-      selectedCard: this.selectedCards,
-      totalAmt: this.totalAmt,
-    };
+    const dateTime = moment(`${this.selectedDateSlot} ${this.selectedTimeSlot}`, 'YYYY-M-D HH:mm').utc();
+    const appointmentDateTime = dateTime.format('YYYY-MM-DDTHH:mm:ss[Z]');
+    
+    console.log(appointmentDateTime);
 
-    if (selectedSlot && !this.pricingPage) {
+    if (appointmentDateTime && !this.pricingPage) {
       this.pricingPage = true;
     } else if (this.pricingPage) {
       this.activeModal.close()
-      // console.log(selectedSlot);
-    //   const modalRef = this.modalService.open(OpenStripeComponent, {
-    //     centered: true,
-    //     backdrop: 'static',
-    //   });
-    //   modalRef.componentInstance.title = 'Pay Bill';
-    //   modalRef.componentInstance.confirmButtonLabel = 'Pay';
-    //   modalRef.componentInstance.cancelButtonLabel = 'Cancel';
-    //   modalRef.componentInstance.data = selectedSlot;
-    //   modalRef.result.then((res) => {});
-    // } else {
-    //   this.toastService.danger('Please select your preference for billing.');
     }
+  }
+
+  getProfile(id): void {
+    this.customerService.getProfile(id).subscribe({
+      next: (res: any) => {
+        if (res.data) {
+          this.practitioner = res.data[0].Username;
+        }
+      },
+      error:
+        (error) => {
+          console.log(error);
+        }
+    });
   }
 }

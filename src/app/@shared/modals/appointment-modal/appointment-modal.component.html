@@ -30,6 +30,7 @@
           }"
         />
       </div>
+      
       <div class="w-md-50 w-100">
         <label for="">Time Slots</label>
         <div class="d-grid h-300-px justify-content-center overflow-auto">
@@ -57,9 +58,9 @@
     />
   </div>
   <div class="modal-body">
-    <div class="font-20-px card-text px-sm-11">
+    <div class="font-20-px card-text px-sm-4">
       <div class="mb-4">
-        You have requested a video call with <b>{{ practitioner }}</b> on <b>{{ selectedDateSlot | date:'MM-dd-yyyy' }}</b>.
+        You have requested a video call with <b>DR. {{ practitioner }}</b> on <b>{{ selectedDateSlot | date:'MM-dd-yyyy' }}</b> at <b>{{ selectedTimeSlot }}</b>.
       </div>
       <div class="mb-4">
         <b>{{ practitioner }}</b> contact info is inclused within the email.
@@ -69,7 +70,7 @@
         and please do not forget to attend!
       </div>
       <div class="mb-4">
-        Sincer thank you and best health to you.
+        Sincere thank you and best health to you.
       </div>
       <div class="d-flex flex-column">
         Healing.tube
