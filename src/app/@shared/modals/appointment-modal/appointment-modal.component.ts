@@ -1,4 +1,10 @@
-import { Component, Injectable, Input, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Injectable,
+  Input,
+  inject,
+} from '@angular/core';
 import {
   NgbActiveModal,
   NgbCalendar,
@@ -10,6 +16,9 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { ToastService } from '../../services/toast.service';
 import { OpenStripeComponent } from '../open-stripe/open-stripe.component';
+import { CustomerService } from '../../services/customer.service';
+import * as moment from 'moment';
+import { AppointmentsService } from '../../services/appointment.service';
 
 @Injectable()
 export class CustomAdapter extends NgbDateAdapter<string> {
@@ -40,11 +49,12 @@ export class CustomAdapter extends NgbDateAdapter<string> {
   styleUrls: ['./appointment-modal.component.scss'],
   providers: [{ provide: NgbDateAdapter, useClass: CustomAdapter }],
 })
-export class AppointmentModalComponent {
+export class AppointmentModalComponent implements AfterViewInit {
   @Input() cancelButtonLabel: string;
   @Input() confirmButtonLabel: string;
   @Input() title: string;
   @Input() closeIcon: boolean;
+  @Input() data: any;
   // model: string;
   timeSlot: any = [];
   today: any;
@@ -102,19 +112,26 @@ export class AppointmentModalComponent {
     },
   ];
 
-  practitioner = 'Health Practitioner'
+  practitioner: any;
+  appointmentData: any;
 
   constructor(
     public activeModal: NgbActiveModal,
     private ngbCalendar: NgbCalendar,
     private dateAdapter: NgbDateAdapter<any>,
     public calendar: NgbCalendar,
+    private customerService: CustomerService,
+    private appointmentsService: AppointmentsService,
     private toastService: ToastService,
     private modalService: NgbModal
   ) {
     this.today = this.dateAdapter.toModel(this.ngbCalendar.getToday())!;
     // console.log(this.today)
     // console.log(this.currentDate, this.currentMonth, this.currentYear,)
+  }
+
+  ngAfterViewInit(): void {
+    this.getProfile(this.data.practitionerProfileId);
   }
 
   async generateTimeSlots(startTime, endTime, duration) {
@@ -181,35 +198,66 @@ export class AppointmentModalComponent {
       this.totalAmt = this.totalAmt - amt;
     }
   }
-  
+
   backToApplication() {
     this.pricingPage = false;
   }
 
   nextToApplication() {
-    const selectedSlot = {
-      selectedDate: this.selectedDateSlot,
-      selectedTime: this.selectedTimeSlot,
-      selectedCard: this.selectedCards,
-      totalAmt: this.totalAmt,
+    const dateTime = moment(
+      `${this.selectedDateSlot} ${this.selectedTimeSlot}`,
+      'YYYY-M-D HH:mm'
+    ).utc();
+    const appointmentDateTime = dateTime.format('YYYY-MM-DDTHH:mm:ss[Z]');
+    // console.log(appointmentDateTime);
+    // console.log(this.practitioner);
+    const topics = [];
+    this.data.topics.map((e) => topics.push(e.name));
+    const applicationObject = {
+      appointment: {
+        appointmentDateTime: appointmentDateTime,
+        profileId: this.data.profileId,
+        practitionerProfileId: this.data.practitionerProfileId,
+        practitionerName: this.data.practitionerName,
+      },
+      topics: topics,
+      slug: this.data.slug,
     };
+    if (applicationObject && !this.pricingPage) {
+      this.createAppointmentSchedule(applicationObject);
+    }
+    // console.log(applicationObject);
 
-    if (selectedSlot && !this.pricingPage) {
+    if (appointmentDateTime && !this.pricingPage) {
       this.pricingPage = true;
     } else if (this.pricingPage) {
-      this.activeModal.close()
-      // console.log(selectedSlot);
-    //   const modalRef = this.modalService.open(OpenStripeComponent, {
-    //     centered: true,
-    //     backdrop: 'static',
-    //   });
-    //   modalRef.componentInstance.title = 'Pay Bill';
-    //   modalRef.componentInstance.confirmButtonLabel = 'Pay';
-    //   modalRef.componentInstance.cancelButtonLabel = 'Cancel';
-    //   modalRef.componentInstance.data = selectedSlot;
-    //   modalRef.result.then((res) => {});
-    // } else {
-    //   this.toastService.danger('Please select your preference for billing.');
+      this.activeModal.close();
     }
+  }
+
+  getProfile(id): void {
+    this.customerService.getProfile(id).subscribe({
+      next: (res: any) => {
+        if (res.data) {
+          this.practitioner = res.data[0].Username;
+        }
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+  }
+
+  createAppointmentSchedule(data) {
+    this.appointmentsService.createAppointment(data).subscribe({
+      next: (res: any) => {
+        this.toastService.success(res.message);
+        console.log(res);
+      },
+      error: (error) => {
+        console.log(error);
+        this.toastService.danger(error.message);
+      },
+    });
   }
 }

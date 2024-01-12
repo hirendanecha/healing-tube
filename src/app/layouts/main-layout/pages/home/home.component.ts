@@ -67,7 +67,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   notificationId: number;
   buttonClicked = false;
   originalFavicon: HTMLLinkElement;
-  notificationSoundOct = ''
+  notificationSoundOct = '';
 
   constructor(
     private modalService: NgbModal,
@@ -139,15 +139,19 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.socketService.socket?.emit('join', { room: this.profileId });
     this.socketService.socket?.on('notification', (data: any) => {
       if (data) {
-        console.log('new-notification', data)
+        console.log('new-notification', data);
         this.notificationId = data.id;
         this.sharedService.isNotify = true;
         this.originalFavicon.href = '/assets/images/icon-unread.jpg';
         if (data?.actionType === 'T') {
           var sound = new Howl({
-            src: ['https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3']
+            src: [
+              'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-notification.mp3',
+            ],
           });
-          this.notificationSoundOct = localStorage?.getItem('notificationSoundEnabled');
+          this.notificationSoundOct = localStorage?.getItem(
+            'notificationSoundEnabled'
+          );
           if (this.notificationSoundOct !== 'N') {
             if (sound) {
               sound?.play();
@@ -172,8 +176,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-
-  ngOnDestroy(): void { }
+  ngOnDestroy(): void {}
 
   onPostFileSelect(event: any): void {
     const file = event.target?.files?.[0] || {};
@@ -333,13 +336,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.postData?.imageUrl ||
       this.postData?.pdfUrl
     ) {
-      if ((this.postData?.meta?.metalink || this.postData?.metalink)) {
-        this.postData.metalink = null
-        this.postData.title = null
-        this.postData.metaimage = null
-        this.postData.metadescription = null
+      if (this.postData?.meta?.metalink || this.postData?.metalink) {
+        this.postData.metalink = null;
+        this.postData.title = null;
+        this.postData.metaimage = null;
+        this.postData.metadescription = null;
         console.log(this.postData);
-
       }
       // this.spinner.show();
       console.log(
@@ -407,7 +409,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   editCommunity(data): void {
-    let modalRef: any
+    let modalRef: any;
     if (data.pageType === 'community') {
       modalRef = this.modalService.open(AddCommunityModalComponent, {
         centered: true,
@@ -517,9 +519,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.toastService.success(res.message);
                 // this.getCommunityDetailsBySlug();
                 this.router.navigate([
-                  `${this.communityDetails.pageType === 'community'
-                    ? 'health-practitioner'
-                    : 'pages'
+                  `${
+                    this.communityDetails.pageType === 'community'
+                      ? 'health-practitioner'
+                      : 'pages'
                   }`,
                 ]);
               }
@@ -572,17 +575,18 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   openUploadEditPostModal(post: any = {}): void {
     const modalRef = this.modalService.open(EditPostModalComponent, {
-      centered: true, backdrop: 'static',
+      centered: true,
+      backdrop: 'static',
     });
     modalRef.componentInstance.title = `Edit Post`;
-    modalRef.componentInstance.confirmButtonLabel = `Save`
+    modalRef.componentInstance.confirmButtonLabel = `Save`;
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
     modalRef.componentInstance.communityId = this.communityDetails?.Id;
     modalRef.componentInstance.data = post.id ? post : null;
     modalRef.result.then((res) => {
       if (res.id) {
-        this.postData = res
-        console.log(this.postData)
+        this.postData = res;
+        console.log(this.postData);
         this.uploadPostFileAndCreatePost();
       }
     });
@@ -621,8 +625,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         const bytes = copyImage.length;
         const megabytes = bytes / (1024 * 1024);
         if (megabytes > 1) {
-          let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">'
-          this.postData['postdescription'] = `<div>${content.replace(copyImage, '').replace(/\<br\>/ig, '').replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
+          let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">';
+          this.postData['postdescription'] = `<div>${content
+            .replace(copyImage, '')
+            .replace(/\<br\>/gi, '')
+            .replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
           // this.postData['postdescription'] = content.replace(copyImage, '');
           const base64Image = copyImage
             .trim()
@@ -654,11 +661,19 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   openAppointmentPopUp(): void {
     const modalRef = this.modalService.open(AppointmentModalComponent, {
       centered: true,
-      size: 'lg'
+      size: 'lg',
     });
+    const data = {
+      profileId: +this.profileId,
+      practitionerProfileId: this.communityDetails?.profileId,
+      practitionerName: this.communityDetails.CommunityName,
+      slug: this.communityDetails.slug,
+      topics: this.communityDetails.areas
+    };
     modalRef.componentInstance.title = `Appointment Date & Time`;
     modalRef.componentInstance.confirmButtonLabel = 'Ok';
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
+    modalRef.componentInstance.data = data;
     modalRef.result.then((res) => {
       if (res === 'success') {
         // this.openUploadVideoModal();
