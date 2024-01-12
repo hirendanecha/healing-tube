@@ -663,10 +663,17 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       centered: true,
       size: 'lg',
     });
+    const data = {
+      profileId: +this.profileId,
+      practitionerProfileId: this.communityDetails?.profileId,
+      practitionerName: this.communityDetails.CommunityName,
+      slug: this.communityDetails.slug,
+      topics: this.communityDetails.areas
+    };
     modalRef.componentInstance.title = `Appointment Date & Time`;
     modalRef.componentInstance.confirmButtonLabel = 'Ok';
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
-    modalRef.componentInstance.profileId = this.communityDetails.profileId;
+    modalRef.componentInstance.data = data;
     modalRef.result.then((res) => {
       if (res === 'success') {
         // this.openUploadVideoModal();

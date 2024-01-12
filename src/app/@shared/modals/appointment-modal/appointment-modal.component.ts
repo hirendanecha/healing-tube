@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, Injectable, Input, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Injectable,
+  Input,
+  inject,
+} from '@angular/core';
 import {
   NgbActiveModal,
   NgbCalendar,
@@ -12,6 +18,7 @@ import { ToastService } from '../../services/toast.service';
 import { OpenStripeComponent } from '../open-stripe/open-stripe.component';
 import { CustomerService } from '../../services/customer.service';
 import * as moment from 'moment';
+import { AppointmentsService } from '../../services/appointment.service';
 
 @Injectable()
 export class CustomAdapter extends NgbDateAdapter<string> {
@@ -42,12 +49,12 @@ export class CustomAdapter extends NgbDateAdapter<string> {
   styleUrls: ['./appointment-modal.component.scss'],
   providers: [{ provide: NgbDateAdapter, useClass: CustomAdapter }],
 })
-export class AppointmentModalComponent implements AfterViewInit{
+export class AppointmentModalComponent implements AfterViewInit {
   @Input() cancelButtonLabel: string;
   @Input() confirmButtonLabel: string;
   @Input() title: string;
   @Input() closeIcon: boolean;
-  @Input() profileId: boolean;
+  @Input() data: any;
   // model: string;
   timeSlot: any = [];
   today: any;
@@ -105,7 +112,8 @@ export class AppointmentModalComponent implements AfterViewInit{
     },
   ];
 
-  practitioner = 'Health Practitioner'
+  practitioner: any;
+  appointmentData: any;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -113,6 +121,7 @@ export class AppointmentModalComponent implements AfterViewInit{
     private dateAdapter: NgbDateAdapter<any>,
     public calendar: NgbCalendar,
     private customerService: CustomerService,
+    private appointmentsService: AppointmentsService,
     private toastService: ToastService,
     private modalService: NgbModal
   ) {
@@ -122,9 +131,7 @@ export class AppointmentModalComponent implements AfterViewInit{
   }
 
   ngAfterViewInit(): void {
-    if (this.profileId) {
-      this.getProfile(this.profileId);
-    }
+    this.getProfile(this.data.practitionerProfileId);
   }
 
   async generateTimeSlots(startTime, endTime, duration) {
@@ -191,21 +198,40 @@ export class AppointmentModalComponent implements AfterViewInit{
       this.totalAmt = this.totalAmt - amt;
     }
   }
-  
+
   backToApplication() {
     this.pricingPage = false;
   }
 
   nextToApplication() {
-    const dateTime = moment(`${this.selectedDateSlot} ${this.selectedTimeSlot}`, 'YYYY-M-D HH:mm').utc();
+    const dateTime = moment(
+      `${this.selectedDateSlot} ${this.selectedTimeSlot}`,
+      'YYYY-M-D HH:mm'
+    ).utc();
     const appointmentDateTime = dateTime.format('YYYY-MM-DDTHH:mm:ss[Z]');
-    
-    console.log(appointmentDateTime);
+    // console.log(appointmentDateTime);
+    // console.log(this.practitioner);
+    const topics = [];
+    this.data.topics.map((e) => topics.push(e.name));
+    const applicationObject = {
+      appointment: {
+        appointmentDateTime: appointmentDateTime,
+        profileId: this.data.profileId,
+        practitionerProfileId: this.data.practitionerProfileId,
+        practitionerName: this.data.practitionerName,
+      },
+      topics: topics,
+      slug: this.data.slug,
+    };
+    if (applicationObject && !this.pricingPage) {
+      this.createAppointmentSchedule(applicationObject);
+    }
+    // console.log(applicationObject);
 
     if (appointmentDateTime && !this.pricingPage) {
       this.pricingPage = true;
     } else if (this.pricingPage) {
-      this.activeModal.close()
+      this.activeModal.close();
     }
   }
 
@@ -216,10 +242,22 @@ export class AppointmentModalComponent implements AfterViewInit{
           this.practitioner = res.data[0].Username;
         }
       },
-      error:
-        (error) => {
-          console.log(error);
-        }
+      error: (error) => {
+        console.log(error);
+      },
+    });
+  }
+
+  createAppointmentSchedule(data) {
+    this.appointmentsService.createAppointment(data).subscribe({
+      next: (res: any) => {
+        this.toastService.success(res.message);
+        console.log(res);
+      },
+      error: (error) => {
+        console.log(error);
+        this.toastService.danger(error.message);
+      },
     });
   }
 }
