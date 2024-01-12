@@ -34,7 +34,12 @@
               class="btn btn-sm btn-primary me-2"
               (click)="editCommunity(communityDetails)"
             >
-              Edit {{ communityDetails?.pageType }}
+              Edit
+              {{
+                communityDetails?.pageType === "community"
+                  ? "Helth-practitioner"
+                  : "page"
+              }}
             </button>
           </ng-container>
           <!-- {{ communityDetails?.pageType }} -->
@@ -61,7 +66,12 @@
                   class="btn btn-sm btn-danger"
                   (click)="removeFromCommunity()"
                 >
-                  Leave {{ communityDetails?.pageType }}
+                  Leave
+                  {{
+                    communityDetails?.pageType === "community"
+                      ? "Helth-practitioner"
+                      : "page"
+                  }}
                 </button>
               </ng-template>
             </ng-container>
@@ -72,7 +82,12 @@
                 (click)="joinCommunity()"
                 [disabled]="buttonClicked"
               >
-                Join {{ communityDetails?.pageType }}
+                Join
+                {{
+                  communityDetails?.pageType === "community"
+                    ? "Helth-practitioner"
+                    : "page"
+                }}
               </button>
             </ng-template>
           </ng-container>
@@ -108,6 +123,48 @@
             >Admin</a
           >
         </li>
+        <ng-container
+          *ngIf="
+            communityDetails.profileId === +profileId &&
+            communityDetails.pageType === 'community'
+          "
+        >
+          <li
+            class="nav-item"
+            role="presentation"
+            (click)="
+              activeCommunityTab = 3; getAppoinments(communityDetails.profileId)
+            "
+          >
+            <a
+              class="nav-link d-center"
+              [ngClass]="activeCommunityTab === 3 ? 'active' : ''"
+              >Appointments</a
+            >
+          </li>
+          <li
+            class="nav-item"
+            role="presentation"
+            (click)="activeCommunityTab = 4"
+          >
+            <a
+              class="nav-link d-center"
+              [ngClass]="activeCommunityTab === 4 ? 'active' : ''"
+              >Invoices</a
+            >
+          </li>
+          <li
+            class="nav-item"
+            role="presentation"
+            (click)="activeCommunityTab = 5"
+          >
+            <a
+              class="nav-link d-center"
+              [ngClass]="activeCommunityTab === 5 ? 'active' : ''"
+              >Change plan</a
+            >
+          </li>
+        </ng-container>
       </ul>
     </div>
   </div>
@@ -365,7 +422,12 @@
 <ng-container
   *ngIf="activeCommunityTab === 2 && communityDetails?.memberList?.length > 0"
 >
-  <ng-container *ngIf="communityDetails?.adminIds?.includes(+profileId)">
+  <ng-container
+    *ngIf="
+      communityDetails?.adminIds?.includes(+profileId) &&
+      communityDetails.pageType === 'page'
+    "
+  >
     <span> Add new admin: </span>
     <div class="input-area h-48-px d-flex align-items-center mb-3">
       <fa-icon [icon]="['fas', 'magnifying-glass']" class="me-1" />
@@ -503,10 +565,79 @@
         class="btn btn-sm btn-danger w-152-px float-end"
         (click)="deleteCommunity()"
       >
-        Delete {{ communityDetails?.pageType }}
+        Delete
+        {{
+          communityDetails?.pageType === "community"
+            ? "Helth-practitioner"
+            : "page"
+        }}
       </button>
     </ng-container>
   </div>
+</ng-container>
+
+<ng-container *ngIf="activeCommunityTab === 3">
+  <ng-container *ngIf="appointmentList.length; else noData">
+  <div class="card rounded shadow border-0 appointment-table">
+    <div class="card-body rounded">
+      <div class="table-responsive">
+        <table class="table table-hover w-100">
+          <thead>
+            <tr class="text-center">
+              <th>Profile</th>
+              <th>Patient Name</th>
+              <th>Appointment Date</th>
+              <th>Appointment Time</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr *ngFor="let appointment of appointmentList">
+                <td>
+                  <img
+                    src="{{ appointment?.ProfilePicName }}"
+                    alt="Profile Pic"
+                    class="w-40-px rounded-5"
+                  />
+                </td>
+                <td>
+                  {{ appointment?.Username || appointment.FirstName }}
+                </td>
+                <td>
+                  {{
+                    appointment?.appointmentDateTime | date : "yyyy-MM-dd"
+                  }}
+                </td>
+                <td>
+                  {{
+                    appointment?.appointmentDateTime | date : "hh:mm a"
+                  }}
+                </td>
+                <td (click)="appointmentCancelation(appointment)">
+                  {{
+                    appointment?.isCancelled === "N"
+                      ? "Scheduled"
+                      : "Cancelled"
+                  }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #noData> 
+    <span class="text-center">
+      No appoinment found
+    </span>
+  </ng-template>
+</ng-container>
+<ng-container *ngIf="activeCommunityTab === 4">
+  <span> coming soon! </span>
+</ng-container>
+<ng-container *ngIf="activeCommunityTab === 5">
+  <span> coming soon! </span>
 </ng-container>
 
 <ng-template #emojiMenu>

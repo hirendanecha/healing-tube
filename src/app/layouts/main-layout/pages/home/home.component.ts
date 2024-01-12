@@ -31,6 +31,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Howl } from 'howler';
 import { EditPostModalComponent } from 'src/app/@shared/modals/edit-post-modal/edit-post-modal.component';
 import { AppointmentModalComponent } from 'src/app/@shared/modals/appointment-modal/appointment-modal.component';
+import { AppointmentsService } from 'src/app/@shared/services/appointment.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -69,6 +70,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   originalFavicon: HTMLLinkElement;
   notificationSoundOct = '';
 
+  appointmentList = [];
+
   constructor(
     private modalService: NgbModal,
     private spinner: NgxSpinnerService,
@@ -82,6 +85,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     public tokenService: TokenStorageService,
     private seoService: SeoService,
+    private appointmentService: AppointmentsService,
     // private metafrenzyService: MetafrenzyService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
@@ -668,7 +672,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       practitionerProfileId: this.communityDetails?.profileId,
       practitionerName: this.communityDetails.CommunityName,
       slug: this.communityDetails.slug,
-      topics: this.communityDetails.areas
+      topics: this.communityDetails.areas,
     };
     modalRef.componentInstance.title = `Appointment Date & Time`;
     modalRef.componentInstance.confirmButtonLabel = 'Ok';
@@ -678,6 +682,47 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       if (res === 'success') {
         // this.openUploadVideoModal();
       }
+    });
+  }
+
+  getAppoinments(id): void {
+    this.appointmentService.appointmentPractitioner(id).subscribe({
+      next: (res) => {
+        this.appointmentList = res.data;
+      },
+      error: (err) => {},
+    });
+  }
+
+  appointmentCancelation(obj) {
+    const modalRef = this.modalService.open(ConfirmationModalComponent, {
+      centered: true,
+    });
+    modalRef.componentInstance.title = `Cancel appointment`;
+    modalRef.componentInstance.confirmButtonLabel = 'Ok';
+    modalRef.componentInstance.cancelButtonLabel = 'Cancel';
+    modalRef.componentInstance.message = `Are you sure want to cancel this appointment?`;
+    modalRef.result.then((res) => {
+      if (res === 'success') {
+        const data = {
+          appointmentId: obj.id,
+          practitionerProfileId: obj.practitionerProfileId,
+          profileId: obj.profileId,
+          practitionerName: obj.practitionerName,
+        };
+        this.getCancelAppoinments(data);
+      }
+    });
+  }
+
+  getCancelAppoinments(obj): void {
+    this.appointmentService.changeAppointmentStatus(obj).subscribe({
+      next: (res) => {
+        // this.appointmentList = res.data;
+        this.toastService.success(res.message)
+        this.getAppoinments(this.communityDetails.profileId)
+      },
+      error: (err) => {},
     });
   }
 }
