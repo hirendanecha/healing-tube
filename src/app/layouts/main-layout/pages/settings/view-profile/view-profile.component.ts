@@ -24,10 +24,11 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   customer: any = {};
   // customer: Customer = new Customer();
   customerPostList: any = [];
-  userId = '';
+  userId : number;
   profilePic: any = {};
   coverPic: any = {};
   profileId: number;
+  routeProfileId: number
   activeTab = 1;
   communityList = [];
   communityId = '';
@@ -53,6 +54,7 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     this.router.events.subscribe((event: any) => {
       const id = event?.routerEvent?.url.split('/')[3];
       this.profileId = id
+      this.routeProfileId = id; 
       if (id) {
         this.getProfile(id);
       }
@@ -170,8 +172,8 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     pdfLink.click();
   }
 
-  getAppoinments(id): void {
-    this.appointmentService.appointmentPractitioner(id).subscribe({
+  getUserAppoinments(id): void {
+    this.appointmentService.AppointmentViewProfile(id).subscribe({
       next: (res) => {
         this.appointmentList = res.data;
       },
@@ -205,7 +207,7 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
       next: (res) => {
         // this.appointmentList = res.data;
         this.toastService.success(res.message)
-        this.getAppoinments(this.profileId)
+        this.getUserAppoinments(this.profileId)
       },
       error: (err) => {},
     });
