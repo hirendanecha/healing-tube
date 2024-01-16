@@ -24,7 +24,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   selector: 'app-open-stripe',
   templateUrl: './open-stripe.component.html',
   styleUrls: ['./open-stripe.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OpenStripeComponent implements AfterViewInit, OnInit {
   @ViewChild(StripeCardNumberComponent)
@@ -78,13 +78,21 @@ export class OpenStripeComponent implements AfterViewInit, OnInit {
       LastName: ['', Validators.required],
       PhoneNo: ['', Validators.required],
       Email: ['', [Validators.required, Validators.email]],
-      Skype: ['', Validators.required]
+      Skype: ['', Validators.required],
     });
   }
 
   ngAfterViewInit(): void {
     this.loadStripe = true;
-    this.paymentService.createPaymentIntent(this.data.totalAmt).subscribe(
+    const metadata = {
+      selectedCard: this.data.selectedCards,
+      practitionerId: this.data.practitionerId,
+      profileId: this.data.profileId,
+      creatorId: this.data.profileId,
+      amount: this.data.totalAmt,
+    };
+    console.log(metadata);
+    this.paymentService.createPaymentIntent(metadata).subscribe(
       (result) => {
         const getPaymentElement = document.getElementById('payment');
         const stripePromise = loadStripe(environment.stripe_key);
@@ -113,7 +121,8 @@ export class OpenStripeComponent implements AfterViewInit, OnInit {
     const { error, result } = await this.stripe.confirmPayment({
       elements: this.elements,
       confirmParams: {
-        return_url: 'http://localhost:4200/',
+        return_url: `${environment.webUrl}health-practitioner/`,
+        // return_url: 'http://localhost:4200/',
       },
     });
     if (error) {

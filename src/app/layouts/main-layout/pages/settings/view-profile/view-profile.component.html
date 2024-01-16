@@ -306,16 +306,14 @@
                         }}
                       </td>
                       <td>
-                        {{
-                          appointment?.appointmentDateTime | date : "hh:mm a"
-                        }}
+                        {{ displayLocalTime(appointment.appointmentDateTime) }}
                       </td>
-                      <td (click)="appointmentCancelation(appointment)">
-                        {{
-                          appointment?.isCancelled === "N"
-                            ? "Scheduled"
-                            : "Cancelled"
-                        }}
+                      <td (click)="getStatus(appointment) === 'Scheduled' ? appointmentCancelation(appointment) : ''">
+                        <button
+                          class="btn btn-sm w-84-px"
+                          [ngClass]="getStatus(appointment) === 'Scheduled' ? 'btn-success' : 'btn-danger'">
+                          {{ getStatus(appointment) }}
+                        </button>
                       </td>
                     </tr>
                   </tbody>

@@ -11,11 +11,11 @@ export class PaymentService {
   private baseUrl = environment.serverUrl + 'stripe';
   constructor(private http: HttpClient) {}
 
-  createPaymentIntent(amount: number): Observable<PaymentIntent> {
+  createPaymentIntent(metadata): Observable<PaymentIntent> {
     return this.http.post<PaymentIntent>(
       `${this.baseUrl}/create-payment-intent`,
       // `${environment.API_URL}stripe/create-payment-intent`,
-      { amount }
+      metadata 
     );
   }
 }

@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import * as moment from 'moment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Customer } from 'src/app/@shared/constant/customer';
 import { ConfirmationModalComponent } from 'src/app/@shared/modals/confirmation-modal/confirmation-modal.component';
@@ -181,6 +182,16 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  getStatus(appointment: any): string {
+    const currentDate = new Date();
+    const appointmentDate = new Date(appointment.appointmentDateTime);
+    if (currentDate > appointmentDate) {
+      return 'Expired';
+    } else {
+      return appointment.isCancelled === 'N' ? 'Scheduled' : 'Cancelled';
+    }
+  }
+
   appointmentCancelation(obj) {
     const modalRef = this.modal.open(ConfirmationModalComponent, {
       centered: true,
@@ -211,5 +222,10 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       error: (err) => {},
     });
+  }
+
+  displayLocalTime(utcDateTime: string): string {
+    const localTime = moment.utc(utcDateTime).local();
+    return localTime.format('h:mm A');
   }
 }
