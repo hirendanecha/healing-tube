@@ -418,12 +418,16 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
 
   feturedSelectCard(cardId: string, amt: number): void {
     const index = this.selectedCards.indexOf(cardId);
-    if (index === -1) {
-      this.selectedCards.push(cardId);
-      this.totalAmt = isNaN(this.totalAmt) ? amt : this.totalAmt + amt;
+    if (this.totalAmt !== undefined && this.totalAmt !== null) {
+      if (index === -1) {
+        this.selectedCards.push(cardId);
+        this.totalAmt = isNaN(this.totalAmt) ? amt : this.totalAmt + amt;
+      } else {
+        this.selectedCards = this.selectedCards.filter((id) => id !== cardId);
+        this.totalAmt = this.totalAmt - amt;
+      }
     } else {
-      this.selectedCards = this.selectedCards.filter((id) => id !== cardId);
-      this.totalAmt = this.totalAmt - amt;
+      this.toastService.danger('Please select your preference for Minutes of Video Time.');
     }
   }
 
