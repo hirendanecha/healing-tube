@@ -51,6 +51,7 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
   allCountryData: any;
   defaultCountry = 'US';
 
+  practitionerId: number;
   practitionerArea: any = [];
   practitionerEmphasis: any = [];
   selectedValues: number[] = [];
@@ -228,8 +229,9 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
             this.spinner.hide();
             if (!res.error) {
               this.submitted = true;
+              this.practitionerId = res.data;
               this.createCommunityAdmin(res.data);
-              this.nextToApplication()
+              this.nextToApplication();
               // this.toastService.success(
               //   'Your Health Practitioner will be approved within 24 hours!'
               // );
@@ -396,9 +398,9 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
     }
   }
 
-  clearForm(){
+  clearForm() {
     this.activeModal.close();
-    this.router.navigate(['/health-practitioner'])
+    this.router.navigate(['/health-practitioner']);
   }
 
   isSelected(id: number): boolean {
@@ -418,23 +420,31 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
 
   feturedSelectCard(cardId: string, amt: number): void {
     const index = this.selectedCards.indexOf(cardId);
-    if (index === -1) {
-      this.selectedCards.push(cardId);
-      this.totalAmt = isNaN(this.totalAmt) ? amt : this.totalAmt + amt;
+    if (this.totalAmt !== undefined && this.totalAmt !== null) {
+      if (index === -1) {
+        this.selectedCards.push(cardId);
+        this.totalAmt = isNaN(this.totalAmt) ? amt : this.totalAmt + amt;
+      } else {
+        this.selectedCards = this.selectedCards.filter((id) => id !== cardId);
+        this.totalAmt = this.totalAmt - amt;
+      }
     } else {
-      this.selectedCards = this.selectedCards.filter((id) => id !== cardId);
-      this.totalAmt = this.totalAmt - amt;
+      this.toastService.danger(
+        'Please select your preference for Minutes of Video Time.'
+      );
     }
   }
 
   backToApplication() {
     this.pricingPage = false;
   }
-  
+
   nextToApplication() {
     const selectedSlot = {
       selectedCard: this.selectedCards,
       totalAmt: this.totalAmt,
+      practitionerId: this.practitionerId,
+      profileId: this.profileId,
     };
 
     if (selectedSlot && !this.pricingPage) {

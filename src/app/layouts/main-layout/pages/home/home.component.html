@@ -578,20 +578,21 @@
 
 <ng-container *ngIf="activeCommunityTab === 3">
   <ng-container *ngIf="appointmentList.length; else noData">
-  <div class="card rounded shadow border-0 appointment-table">
-    <div class="card-body rounded">
-      <div class="table-responsive">
-        <table class="table table-hover w-100">
-          <thead>
-            <tr class="text-center">
-              <th>Profile</th>
-              <th>Patient Name</th>
-              <th>Appointment Date</th>
-              <th>Appointment Time</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
+    <div class="card rounded shadow border-0 appointment-table">
+      <div class="card-body rounded">
+        <h5 class="m-0">Appointment Details</h5>
+        <div class="table-responsive">
+          <table class="table table-hover w-100">
+            <thead>
+              <tr class="text-center">
+                <th>Profile</th>
+                <th>Patient Name</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
               <tr *ngFor="let appointment of appointmentList">
                 <td>
                   <img
@@ -604,21 +605,27 @@
                   {{ appointment?.Username || appointment.FirstName }}
                 </td>
                 <td>
-                  {{
-                    appointment?.appointmentDateTime | date : "yyyy-MM-dd"
-                  }}
+                  {{ appointment?.appointmentDateTime | date : "yyyy-MM-dd" }}
                 </td>
                 <td>
+                  {{ displayLocalTime(appointment.appointmentDateTime) }}
+                </td>
+                <!-- <td>
                   {{
                     appointment?.appointmentDateTime | date : "hh:mm a"
                   }}
-                </td>
-                <td (click)="appointmentCancelation(appointment)">
-                  {{
+                </td> -->
+                <td (click)="getStatus(appointment) === 'Scheduled' ? appointmentCancelation(appointment) : ''">
+                  <!-- {{
                     appointment?.isCancelled === "N"
                       ? "Scheduled"
                       : "Cancelled"
-                  }}
+                  }} -->
+                  <button
+                    class="btn btn-sm w-84-px"
+                    [ngClass]="getStatus(appointment) === 'Scheduled' ? 'btn-success' : 'btn-danger'">
+                    {{ getStatus(appointment) }}
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -627,10 +634,8 @@
       </div>
     </div>
   </ng-container>
-  <ng-template #noData> 
-    <span class="text-center">
-      No appoinment found
-    </span>
+  <ng-template #noData>
+    <span class="text-center"> No appoinment found </span>
   </ng-template>
 </ng-container>
 <ng-container *ngIf="activeCommunityTab === 4">

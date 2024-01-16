@@ -32,6 +32,7 @@ import { Howl } from 'howler';
 import { EditPostModalComponent } from 'src/app/@shared/modals/edit-post-modal/edit-post-modal.component';
 import { AppointmentModalComponent } from 'src/app/@shared/modals/appointment-modal/appointment-modal.component';
 import { AppointmentsService } from 'src/app/@shared/services/appointment.service';
+import * as moment from 'moment';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -694,6 +695,16 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  getStatus(appointment: any): string {
+    const currentDate = new Date();
+    const appointmentDate = new Date(appointment.appointmentDateTime);
+    if (currentDate > appointmentDate) {
+      return 'Expired';
+    } else {
+      return appointment.isCancelled === 'N' ? 'Scheduled' : 'Cancelled';
+    }
+  }
+
   appointmentCancelation(obj) {
     const modalRef = this.modalService.open(ConfirmationModalComponent, {
       centered: true,
@@ -724,5 +735,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       error: (err) => {},
     });
+  }
+
+  displayLocalTime(utcDateTime: string): string {
+    const localTime = moment.utc(utcDateTime).local();
+    return localTime.format('h:mm A');
   }
 }

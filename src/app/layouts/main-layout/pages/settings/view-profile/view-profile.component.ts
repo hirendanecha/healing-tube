@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import * as moment from 'moment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Customer } from 'src/app/@shared/constant/customer';
 import { ConfirmationModalComponent } from 'src/app/@shared/modals/confirmation-modal/confirmation-modal.component';
@@ -24,10 +25,11 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   customer: any = {};
   // customer: Customer = new Customer();
   customerPostList: any = [];
-  userId = '';
+  userId : number;
   profilePic: any = {};
   coverPic: any = {};
   profileId: number;
+  routeProfileId: number
   activeTab = 1;
   communityList = [];
   communityId = '';
@@ -53,6 +55,7 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     this.router.events.subscribe((event: any) => {
       const id = event?.routerEvent?.url.split('/')[3];
       this.profileId = id
+      this.routeProfileId = id; 
       if (id) {
         this.getProfile(id);
       }
@@ -170,13 +173,23 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     pdfLink.click();
   }
 
-  getAppoinments(id): void {
-    this.appointmentService.appointmentPractitioner(id).subscribe({
+  getUserAppoinments(id): void {
+    this.appointmentService.AppointmentViewProfile(id).subscribe({
       next: (res) => {
         this.appointmentList = res.data;
       },
       error: (err) => {},
     });
+  }
+
+  getStatus(appointment: any): string {
+    const currentDate = new Date();
+    const appointmentDate = new Date(appointment.appointmentDateTime);
+    if (currentDate > appointmentDate) {
+      return 'Expired';
+    } else {
+      return appointment.isCancelled === 'N' ? 'Scheduled' : 'Cancelled';
+    }
   }
 
   appointmentCancelation(obj) {
@@ -205,9 +218,14 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
       next: (res) => {
         // this.appointmentList = res.data;
         this.toastService.success(res.message)
-        this.getAppoinments(this.profileId)
+        this.getUserAppoinments(this.profileId)
       },
       error: (err) => {},
     });
+  }
+
+  displayLocalTime(utcDateTime: string): string {
+    const localTime = moment.utc(utcDateTime).local();
+    return localTime.format('h:mm A');
   }
 }
