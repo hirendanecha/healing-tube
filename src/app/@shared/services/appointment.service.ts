@@ -26,4 +26,8 @@ export class AppointmentsService {
   appointmentPractitioner(id): Observable<any> {
     return this.http.get(`${this.baseUrl}/practitioner-appointments/${id}&q=${Date.now()}`);
   }
+
+  getAppointmentCards(): Observable<any> {
+    return this.http.get(`${environment.serverUrl}plans`);
+  }
 }

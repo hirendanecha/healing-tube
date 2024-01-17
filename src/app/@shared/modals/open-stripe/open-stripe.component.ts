@@ -84,15 +84,17 @@ export class OpenStripeComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit(): void {
     this.loadStripe = true;
-    const metadata = {
-      selectedCard: this.data.selectedCards,
-      practitionerId: this.data.practitionerId,
-      profileId: this.data.profileId,
-      creatorId: this.data.profileId,
-      amount: this.data.totalAmt,
+    const payData = {
+      amt: this.data.totalAmt,
+      metadata: {
+        selectedCard: this.data.selectedCards,
+        practitionerId: this.data.practitionerId,
+        profileId: this.data.profileId,
+        creatorId: this.data.profileId,
+        amount: this.data.totalAmt,
+      },
     };
-    console.log(metadata);
-    this.paymentService.createPaymentIntent(metadata).subscribe(
+    this.paymentService.createPaymentIntent(payData).subscribe(
       (result) => {
         const getPaymentElement = document.getElementById('payment');
         const stripePromise = loadStripe(environment.stripe_key);
