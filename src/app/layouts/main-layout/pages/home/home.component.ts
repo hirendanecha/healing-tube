@@ -432,7 +432,9 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       data.link1 = this.sharedService?.advertizementLink[0]?.url;
       data.link2 = this.sharedService?.advertizementLink[1]?.url;
     }
-    modalRef.componentInstance.title = `Edit ${data.pageType} Details`;
+    modalRef.componentInstance.title = `Edit ${
+      data.pageType === 'community' ? 'Practitioner' : 'Page'
+    } Details`;
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
     modalRef.componentInstance.confirmButtonLabel = 'Save';
     modalRef.componentInstance.closeIcon = true;
@@ -730,8 +732,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.appointmentService.changeAppointmentStatus(obj).subscribe({
       next: (res) => {
         // this.appointmentList = res.data;
-        this.toastService.success(res.message)
-        this.getAppoinments(this.communityDetails.profileId)
+        this.toastService.success(res.message);
+        this.getAppoinments(this.communityDetails.profileId);
       },
       error: (err) => {},
     });

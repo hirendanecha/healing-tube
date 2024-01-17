@@ -1,14 +1,16 @@
-<div class="add-pratitioner-contaner">
+<div class="add-pratitioner-contaner" [ngClass]="{'edit-pratitioner-contaner': data?.Id}">
   <ng-container *ngIf="!pricingPage">
   <div class="modal-header border-0">
     <h5 class="text-start mb-5">{{ title }}</h5>
     <!-- <h5 class="text-start">Create Community</h5> -->
-    <!-- <fa-icon
-      [icon]="['fas', 'xmark']"
-      class="xxltxt"
-      role="button"
-      (click)="activeModal.close()"
-    /> -->
+    <ng-container *ngIf="data.Id">
+      <fa-icon
+        [icon]="['fas', 'xmark']"
+        class="xxltxt"
+        role="button"
+        (click)="activeModal.close()"
+      />
+    </ng-container>
   </div>
   
   <div class="modal-body text-center">
