@@ -106,6 +106,7 @@ import { HealthPraatitionerCardComponent } from './components/health-partitioner
 import { EditPostModalComponent } from './modals/edit-post-modal/edit-post-modal.component';
 import { AppointmentModalComponent } from './modals/appointment-modal/appointment-modal.component';
 import { OpenStripeComponent } from './modals/open-stripe/open-stripe.component';
+import { AppointmentCallComponent } from '../layouts/main-layout/pages/appointment-call/appointment-call.component';
 
 const sharedComponents = [
   ConfirmationModalComponent,
@@ -132,7 +133,8 @@ const sharedComponents = [
   HealthPraatitionerCardComponent,
   EditPostModalComponent,
   AppointmentModalComponent,
-  OpenStripeComponent
+  OpenStripeComponent,
+  AppointmentCallComponent,
 ];
 
 const sharedModules = [
