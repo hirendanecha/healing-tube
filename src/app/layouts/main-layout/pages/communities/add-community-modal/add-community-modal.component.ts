@@ -121,7 +121,8 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
       this.communityForm.get('State').enable();
       this.communityForm.get('City').enable();
       this.communityForm.get('County').enable();
-      console.log(this.data);
+      this.selectedValues = this.data.emphasis.map((emphasis) => emphasis.eId);
+      this.selectedAreaValues = this.data.areas.map((area) => area.aId);
     }
   }
 
@@ -226,8 +227,11 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
       }
     }
     if (this.communityForm.valid && this.data.Id) {
+      const formData = this.communityForm.value;
+      formData['emphasis'] = this.selectedValues;
+      formData['areas'] = this.selectedAreaValues;
       this.communityService
-        .editCommunity(this.communityForm.value, this.data.Id)
+        .editCommunity(formData, this.data.Id)
         .subscribe({
           next: (res: any) => {
             this.spinner.hide();
