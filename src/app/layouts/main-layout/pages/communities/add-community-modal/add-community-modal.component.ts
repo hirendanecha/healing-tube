@@ -19,7 +19,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UploadFilesService } from 'src/app/@shared/services/upload-files.service';
 import { Router } from '@angular/router';
 import { OpenStripeComponent } from 'src/app/@shared/modals/open-stripe/open-stripe.component';
-import { AppointmentsService } from 'src/app/@shared/services/appointment.service';
+import { PaymentService } from 'src/app/@shared/services/payment.service';
 
 @Component({
   selector: 'app-add-community-modal',
@@ -85,7 +85,7 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
     public activeModal: NgbActiveModal,
     private spinner: NgxSpinnerService,
     private communityService: CommunityService,
-    private appointmentService: AppointmentsService,
+    private paymentService: PaymentService,
     private toastService: ToastService,
     private customerService: CustomerService,
     private uploadService: UploadFilesService,
@@ -137,7 +137,7 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
   }
 
   getAppointmentCards() {
-    this.appointmentService.getAppointmentCards().subscribe({
+    this.paymentService.getAppointmentCards().subscribe({
       next: (res) => {
         this.appointmentCards = res.data
       },
