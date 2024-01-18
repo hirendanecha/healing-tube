@@ -647,6 +647,7 @@
           <table class="table table-hover w-100">
             <thead>
               <tr class="text-center">
+                <th>#</th>
                 <th>Profile</th>
                 <th>Patient Name</th>
                 <th>Purchase Date</th>
@@ -655,7 +656,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let invoice of invoiceList">
+              <tr *ngFor="let invoice of invoiceList; let i = index">
+                <td>{{ i + 1 }}</td>
                 <td>
                   <img
                     src="{{ invoice?.ProfilePicName }}"
