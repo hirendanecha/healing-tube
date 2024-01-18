@@ -639,7 +639,56 @@
   </ng-template>
 </ng-container>
 <ng-container *ngIf="activeCommunityTab === 4">
-  <span> coming soon! </span>
+  <ng-container *ngIf="invoiceList.length; else noData">
+    <div class="card rounded shadow border-0 appointment-table">
+      <div class="card-body rounded">
+        <h5 class="m-0">Invoice Details</h5>
+        <div class="table-responsive">
+          <table class="table table-hover w-100">
+            <thead>
+              <tr class="text-center">
+                <th>Profile</th>
+                <th>Patient Name</th>
+                <th>Purchase Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let invoice of invoiceList">
+                <td>
+                  <img
+                    src="{{ invoice?.ProfilePicName }}"
+                    alt="Profile Pic"
+                    class="w-40-px rounded-5"
+                  />
+                </td>
+                <td>
+                  {{ invoice?.Username || invoice.FirstName }}
+                </td>
+                <td>
+                  {{ invoice?.appointmentDateTime | date : "yyyy-MM-dd" }}
+                </td>
+                <td>
+                  ${{ invoice?.amt }}.00
+                </td>
+                <td>
+                  <button
+                    class="btn btn-sm w-84-px"
+                    [ngClass]="getInvoiceStatus(invoice) === 'Active' ? 'btn-success' : 'btn-danger'">
+                    {{ getInvoiceStatus(invoice) }}
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #noData>
+    <span class="text-center"> No Invoices found </span>
+  </ng-template>
 </ng-container>
 <ng-container *ngIf="activeCommunityTab === 5">
   <span> coming soon! </span>

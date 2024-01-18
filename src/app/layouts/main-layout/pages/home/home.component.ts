@@ -72,6 +72,80 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   notificationSoundOct = '';
 
   appointmentList = [];
+  // invoiceList = [];
+
+  invoiceList: any[] = [
+    {
+      "id": 41,
+      "appointmentDateTime": "2024-01-31T03:01:00.000Z",
+      "profileId": 68001,
+      "practitionerProfileId": 68001,
+      "amt": 30,
+      "createdDate": "2024-01-16T09:21:45.000Z",
+      "isCancelled": "N",
+      "practitionerName": "Opash DR",
+      "Username": "veee",
+      "FirstName": "Ajay",
+      "LastName": "Gadhwal",
+      "ProfilePicName": "https://healing-tube.s3.us-west-1.wasabisys.com/dummy-image-300x298.jpg"
+    },
+    {
+      "id": 42,
+      "appointmentDateTime": "2024-02-01T08:30:00.000Z",
+      "profileId": 78002,
+      "practitionerProfileId": 78002,
+      "amt": 200,
+      "createdDate": "2024-02-15T14:10:22.000Z",
+      "isCancelled": "N",
+      "practitionerName": "Jane Smith",
+      "Username": "jane_smith",
+      "FirstName": "Jane",
+      "LastName": "Smith",
+      "ProfilePicName": "https://healing-tube.s3.us-west-1.wasabisys.com/dummy-image-300x298.jpg"
+    },
+    {
+      "id": 43,
+      "appointmentDateTime": "2024-02-28T12:00:00.000Z",
+      "profileId": 78003,
+      "practitionerProfileId": 78003,
+      "amt": 120,
+      "createdDate": "2024-02-20T09:45:11.000Z",
+      "isCancelled": "Y",
+      "practitionerName": "John Doe",
+      "Username": "john_doe",
+      "FirstName": "John",
+      "LastName": "Doe",
+      "ProfilePicName": "https://healing-tube.s3.us-west-1.wasabisys.com/dummy-image-300x298.jpg"
+    },
+    {
+      "id": 44,
+      "appointmentDateTime": "2024-03-10T15:45:00.000Z",
+      "profileId": 78004,
+      "practitionerProfileId": 78004,
+      "amt": 220,
+      "createdDate": "2024-03-05T11:30:18.000Z",
+      "isCancelled": "N",
+      "practitionerName": "Anna Johnson",
+      "Username": "anna_johnson",
+      "FirstName": "Anna",
+      "LastName": "Johnson",
+      "ProfilePicName": "https://healing-tube.s3.us-west-1.wasabisys.com/dummy-image-300x298.jpg"
+    },
+    {
+      "id": 45,
+      "appointmentDateTime": "2024-03-20T09:00:00.000Z",
+      "profileId": 78005,
+      "practitionerProfileId": 78005,
+      "amt": 300,
+      "createdDate": "2024-03-15T13:20:05.000Z",
+      "isCancelled": "Y",
+      "practitionerName": "Michael Brown",
+      "Username": "michael_brown",
+      "FirstName": "Michael",
+      "LastName": "Brown",
+      "ProfilePicName": "https://healing-tube.s3.us-west-1.wasabisys.com/dummy-image-300x298.jpg"
+    }
+  ];
 
   constructor(
     private modalService: NgbModal,
@@ -704,6 +778,16 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       return 'Expired';
     } else {
       return appointment.isCancelled === 'N' ? 'Scheduled' : 'Cancelled';
+    }
+  }
+
+  getInvoiceStatus(invoice: any): string {
+    const currentDate = new Date();
+    const appointmentDate = new Date(invoice.appointmentDateTime);
+    if (currentDate > appointmentDate) {
+      return 'Upcoming';
+    } else {
+      return invoice.isCancelled === 'N' ? 'Active' : 'Expired';
     }
   }
 
