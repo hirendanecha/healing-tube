@@ -19,6 +19,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UploadFilesService } from 'src/app/@shared/services/upload-files.service';
 import { Router } from '@angular/router';
 import { OpenStripeComponent } from 'src/app/@shared/modals/open-stripe/open-stripe.component';
+import { PaymentService } from 'src/app/@shared/services/payment.service';
 
 @Component({
   selector: 'app-add-community-modal',
@@ -57,6 +58,8 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
   selectedValues: number[] = [];
   selectedAreaValues: number[] = [];
 
+  appointmentCards: any = []
+
   communityForm = new FormGroup({
     profileId: new FormControl(),
     CommunityName: new FormControl(''),
@@ -77,53 +80,12 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
   pricingPage: boolean;
   totalAmt: number;
   selectedCards: any[] = [];
-  cards: any[] = [
-    {
-      title: '600 Minutes of Video Time',
-      id: 1,
-      description: `600 minutes of video call time provides enough minutes for twenty 30-minute consultation calls per month.`,
-      pricing: `$30.00 per month`,
-      rate: 30,
-    },
-    {
-      title: '3000 Minutes of Video Time',
-      id: 2,
-      description: `3000 minutes of video call time provides enough minutes for one hundred 30-minute consultation calls per month.`,
-      pricing: `$120.00 per month`,
-      rate: 120,
-    },
-    {
-      title: '6000 Minutes of Video Time',
-      id: 3,
-      description: `6000 minutes of video call time provides enough minutes for two hundred 30-minute consultation calls per month.`,
-      pricing: `$200.00 per month`,
-      rate: 200,
-    },
-  ];
-
-  featuredCards: any[] = [
-    {
-      title: 'Dedicated Server and Unlimited Minutes of Video Call Time',
-      id: 11,
-      description: `A dedicated server provides an unlimited number of call time minutes.
-      Pricing is dependent on the selected server.
-      Please contact us for details.`,
-      pricing: `(Select and well contact you to discuss)`,
-      rate: 0,
-    },
-    {
-      title: 'Featured Practitioner',
-      id: 22,
-      description: `Become a Featured Practitioner and your practice will be featured throughout Healing.tube`,
-      pricing: `$100.00 per month`,
-      rate: 100,
-    },
-  ];
 
   constructor(
     public activeModal: NgbActiveModal,
     private spinner: NgxSpinnerService,
     private communityService: CommunityService,
+    private paymentService: PaymentService,
     private toastService: ToastService,
     private customerService: CustomerService,
     private uploadService: UploadFilesService,
@@ -137,6 +99,7 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.getAllCountries();
     this.getCategories();
+    this.getAppointmentCards();
 
     if (this.data.Id) {
       this.communityForm.patchValue({
@@ -158,7 +121,8 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
       this.communityForm.get('State').enable();
       this.communityForm.get('City').enable();
       this.communityForm.get('County').enable();
-      console.log(this.data);
+      this.selectedValues = this.data.emphasis.map((emphasis) => emphasis.eId);
+      this.selectedAreaValues = this.data.areas.map((area) => area.aId);
     }
   }
 
@@ -171,6 +135,17 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
           this.onZipChange(val);
         }
       });
+  }
+
+  getAppointmentCards() {
+    this.paymentService.getAppointmentCards().subscribe({
+      next: (res) => {
+        this.appointmentCards = res.data
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
   }
 
   uploadImgAndSubmit(): void {
@@ -252,8 +227,11 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
       }
     }
     if (this.communityForm.valid && this.data.Id) {
+      const formData = this.communityForm.value;
+      formData['emphasis'] = this.selectedValues;
+      formData['areas'] = this.selectedAreaValues;
       this.communityService
-        .editCommunity(this.communityForm.value, this.data.Id)
+        .editCommunity(formData, this.data.Id)
         .subscribe({
           next: (res: any) => {
             this.spinner.hide();
