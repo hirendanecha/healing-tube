@@ -323,17 +323,20 @@ export class ResearchListComponent {
 
   resetPost(): void {
     this.researchForm.reset();
-    this.tagInputDefaultData = null;
+    this.researchForm.get('posttoprofileid').setValue('');
+    this.tagInputDefaultData = 'reset';
     this.selectedImgFile = null;
     this.selectedpdfFile = null;
+    this.postFile = null;
+    this.postImage = null;
     setTimeout(() => {
       this.tagInputDefaultData = null;
     }, 100);
-    console.log(this.tagInputDefaultData)
-    Object.keys(this.researchForm.controls).forEach(key => {
+    Object.keys(this.researchForm.controls).forEach((key) => {
       this.researchForm.get(key).setErrors(null);
     });
-    console.log(this.researchForm.value)
+    this.formIsClicked.setValue(false);
+    this.formIsSubmitted.setValue(false);
   }
 
   onChangeTag(event) {

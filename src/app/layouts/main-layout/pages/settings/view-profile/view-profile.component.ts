@@ -25,11 +25,11 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   customer: any = {};
   // customer: Customer = new Customer();
   customerPostList: any = [];
-  userId : number;
+  userId: number;
   profilePic: any = {};
   coverPic: any = {};
   profileId: number;
-  routeProfileId: number
+  routeProfileId: number;
   activeTab = 1;
   communityList = [];
   communityId = '';
@@ -54,8 +54,8 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {
     this.router.events.subscribe((event: any) => {
       const id = event?.routerEvent?.url.split('/')[3];
-      this.profileId = id
-      this.routeProfileId = id; 
+      this.profileId = id;
+      this.routeProfileId = id;
       if (id) {
         this.getProfile(id);
       }
@@ -69,7 +69,7 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     this.modalService.close();
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   getProfile(id): void {
     this.spinner.show();
@@ -140,24 +140,21 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getPdfs(): void {
-    this.postService.getPdfsFile(this.customer.Id).subscribe(
-      {
-        next: (res: any) => {
-          this.spinner.hide();
-          if (res) {
-            res.map((e: any) => {
-              e.pdfName = e.pdfUrl.split('/')[3].replaceAll('%', ' ')
-            })
-            this.pdfList = res;
-            console.log(this.pdfList);
-          }
-        },
-        error:
-          (error) => {
-            this.spinner.hide();
-            console.log(error);
-          }
-      });
+    this.postService.getPdfsFile(this.customer.profileId).subscribe({
+      next: (res: any) => {
+        this.spinner.hide();
+        if (res) {
+          res.map((e: any) => {
+            e.pdfName = e.pdfUrl.split('/')[3].replaceAll('%', ' ');
+          });
+          this.pdfList = res;
+        }
+      },
+      error: (error) => {
+        this.spinner.hide();
+        console.log(error);
+      },
+    });
   }
 
   viewUserPost(id) {
@@ -217,8 +214,8 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     this.appointmentService.changeAppointmentStatus(obj).subscribe({
       next: (res) => {
         // this.appointmentList = res.data;
-        this.toastService.success(res.message)
-        this.getUserAppoinments(this.profileId)
+        this.toastService.success(res.message);
+        this.getUserAppoinments(this.profileId);
       },
       error: (err) => {},
     });
@@ -227,5 +224,32 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   displayLocalTime(utcDateTime: string): string {
     const localTime = moment.utc(utcDateTime).local();
     return localTime.format('h:mm A');
+  }
+
+  deletePost(postId): void {
+    const modalRef = this.modal.open(ConfirmationModalComponent, {
+      centered: true,
+      backdrop: 'static',
+    });
+    modalRef.componentInstance.title = 'Delete post';
+    modalRef.componentInstance.confirmButtonLabel = 'Delete';
+    modalRef.componentInstance.cancelButtonLabel = 'Cancel';
+    modalRef.componentInstance.message =
+      'Are you sure want to delete this post?';
+    modalRef.result.then((res) => {
+      if (res === 'success') {
+        this.postService.deletePost(postId).subscribe({
+          next: (res: any) => {
+            if (res) {
+              this.toastService.success('Post deleted successfully');
+              this.getPdfs();
+            }
+          },
+          error: (error) => {
+            console.log('error : ', error);
+          },
+        });
+      }
+    });
   }
 }
