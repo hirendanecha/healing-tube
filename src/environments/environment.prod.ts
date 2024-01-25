@@ -13,5 +13,5 @@ export const environment = {
   webUrl: webUrl,
   tubeUrl: tubeUrl,
   domain: '.healing.tube',
-  stripe_key: 'pk_test_51MwOHTSJJZB3pTDyqpZk5NJDaWkbuGiruTp79We9CcR2oODObX93TleYFTJj2qLowRuRL1DRTSIl8Vb1YiFyW7e900BYWlZKSM'
+  stripe_key: 'pk_test_51Oc0AZSF5c901wKhuFGrUlOLKnJwwwMNAhLpUnLEp4iBWMPQJxie0c5loRyJiks3WmglciRnbgvhpKiBXrhF5d3300VxeoxwRo'
 };

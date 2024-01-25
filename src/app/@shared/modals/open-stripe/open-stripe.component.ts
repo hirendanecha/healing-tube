@@ -19,6 +19,8 @@ import { StripeCardComponent, StripeCardNumberComponent } from 'ngx-stripe';
 import { environment } from 'src/environments/environment';
 import { PaymentService } from '../../services/payment.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastService } from '../../services/toast.service';
+import { SharedService } from '../../services/shared.service';
 
 @Component({
   selector: 'app-open-stripe',
@@ -69,8 +71,10 @@ export class OpenStripeComponent implements AfterViewInit, OnInit {
   constructor(
     public activeModal: NgbActiveModal,
     private paymentService: PaymentService,
-    private fb: FormBuilder
-  ) {}
+    private fb: FormBuilder,
+    private toasterService: ToastService,
+    private sharedService: SharedService
+  ) { }
 
   ngOnInit(): void {
     this.paymentForm = this.fb.group({
@@ -97,13 +101,13 @@ export class OpenStripeComponent implements AfterViewInit, OnInit {
     this.paymentService.createPaymentIntent(payData).subscribe(
       (result) => {
         const getPaymentElement = document.getElementById('payment');
-        const stripePromise = loadStripe(environment.stripe_key);
+        const stripePromise = loadStripe(environment.stripe_key, { locale: 'en' });
         stripePromise.then((stripe) => {
           this.loadStripe = false;
           this.stripe = stripe;
           this.elements = this.stripe.elements({
             clientSecret: result.client_secret,
-            description: 'test test',
+            description: 'Software development services',
           });
           const card = this.elements.create('payment');
           card.mount(getPaymentElement);
@@ -119,28 +123,51 @@ export class OpenStripeComponent implements AfterViewInit, OnInit {
   }
 
   async pay() {
+    const email = localStorage.getItem('email');
     this.loading = true;
-    const { error, result } = await this.stripe.confirmPayment({
+    this.stripe.confirmPayment({
       elements: this.elements,
       confirmParams: {
-        return_url: `${environment.webUrl}health-practitioner/`,
+        return_url: window.location.href,
+        payment_method_data: {
+          billing_details: {
+            name: this.sharedService?.userData?.Username,
+            email: email
+          }
+        }
         // return_url: 'http://localhost:4200/',
       },
-    });
-    if (error) {
-      this.loading = false;
-      this.activeModal.close(true);
-    }
-    if (result) {
-      this.loading = false;
+      redirect: 'if_required'
+    }).then((result: any) => {
+      // this.spinner.hide();
       if (result.error) {
-        this.msg = result.error.message;
-        this.type = 'danger';
-        return;
+        this.toasterService.danger(result.error.message);
       } else {
-        this.activeModal.close(false);
+        // The payment has been processed!
+        if (result.paymentIntent.status === 'succeeded') {
+          this.toasterService.success('the payment has been success')
+          this.activeModal.close(true);
+        }
       }
-    }
+    });
+    // if (error) {
+    //   this.loading = false;
+    //   console.log(error)
+    //   this.toasterService.danger(error);
+    //   this.activeModal.close(true);
+    // }
+    // if (result) {
+    //   this.loading = false;
+    //   if (result.error) {
+    //     this.msg = result.error.message;
+    //     this.toasterService.danger(result.error.message);
+    //     this.type = 'danger';
+    //     return;
+    //   } else {
+    //     console.log(result);
+    //     this.activeModal.close(true);
+    //   }
+    // }
   }
 
   onChange(ev: StripeCardElementChangeEvent, id: string) {
