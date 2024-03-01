@@ -7,10 +7,9 @@ import { SeoService } from 'src/app/@shared/services/seo.service';
 @Component({
   selector: 'app-research-details',
   templateUrl: './research-details.component.html',
-  styleUrls: ['./research-details.component.scss']
+  styleUrls: ['./research-details.component.scss'],
 })
 export class ResearchDetailsComponent {
-
   groupDetails: any = {};
   posts: any = [];
   resources: any = [];
@@ -18,7 +17,7 @@ export class ResearchDetailsComponent {
   pagination: any = {
     page: 1,
     limit: 12,
-  }
+  };
 
   constructor(
     private profileService: ProfileService,
@@ -31,25 +30,33 @@ export class ResearchDetailsComponent {
 
   GetGroupBasicDetails(): void {
     this.spinner.show();
-    const uniqueLink = this.route.snapshot.paramMap.get('uniqueLink');
-
-    this.profileService.getGroupBasicDetails(uniqueLink).subscribe({
-      next: (res: any) => {
-        if (res?.ID) {
-          this.groupDetails = res;
-          const data = {
-            title: `HealingTube Research ${this.groupDetails?.PageTitle}`,
-            url: `${window.location.href}`,
-            description: this.groupDetails?.PageDescription,
-            image: this.groupDetails?.CoverPicName || this.groupDetails?.ProfilePicName
-          };
-          this.seoService.updateSeoMetaData(data);
-          this.GetGroupPostById();
-        }
-        this.spinner.hide();
-      },
-      error: () => {
-        this.spinner.hide();
+    // const uniqueLink = this.route.snapshot.paramMap.get('uniqueLink');
+    this.route.paramMap.subscribe((paramMap) => {
+      const uniqueLink = paramMap.get('uniqueLink');
+      console.log(uniqueLink);
+      if (uniqueLink) {
+        this.profileService.getGroupBasicDetails(uniqueLink).subscribe({
+          next: (res: any) => {
+            if (res?.ID) {
+              this.spinner.hide();
+              this.groupDetails = res;
+              const data = {
+                title: `HealingTube Research ${this.groupDetails?.PageTitle}`,
+                url: `${window.location.href}`,
+                description: this.groupDetails?.PageDescription,
+                image:
+                  this.groupDetails?.CoverPicName ||
+                  this.groupDetails?.ProfilePicName,
+              };
+              this.seoService.updateSeoMetaData(data);
+              this.GetGroupPostById();
+            }
+            this.spinner.hide();
+          },
+          error: () => {
+            this.spinner.hide();
+          },
+        });
       }
     });
   }
@@ -57,18 +64,24 @@ export class ResearchDetailsComponent {
   GetGroupPostById(): void {
     this.spinner.show();
 
-    this.profileService.getGroupPostById(this.groupDetails?.ID, this.pagination?.page, this.pagination?.limit).subscribe({
-      next: (res: any) => {
-        if (res?.length > 0) {
-          this.posts = [...this.posts, ...res];
-          this.isLoadMorePosts = res?.length === this.pagination?.limit;
-        }
-        this.spinner.hide();
-      },
-      error: () => {
-        this.spinner.hide();
-      }
-    });
+    this.profileService
+      .getGroupPostById(
+        this.groupDetails?.ID,
+        this.pagination?.page,
+        this.pagination?.limit
+      )
+      .subscribe({
+        next: (res: any) => {
+          if (res?.length > 0) {
+            this.posts = [...this.posts, ...res];
+            this.isLoadMorePosts = res?.length === this.pagination?.limit;
+          }
+          this.spinner.hide();
+        },
+        error: () => {
+          this.spinner.hide();
+        },
+      });
   }
 
   GetGroupFileResourcesById(id: string): void {
@@ -83,7 +96,7 @@ export class ResearchDetailsComponent {
       },
       error: () => {
         this.spinner.hide();
-      }
+      },
     });
   }
 
