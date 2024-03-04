@@ -14,7 +14,7 @@ export class SharedService {
   userData: any = {};
   notificationList: any = [];
   isNotify = false;
-  advertizementLink: any = []
+  advertizementLink: any = [];
 
   constructor(
     public modalService: NgbModal,
@@ -22,7 +22,7 @@ export class SharedService {
     private customerService: CustomerService,
     private route: ActivatedRoute,
     private communityService: CommunityService,
-    private postService: PostService,
+    private postService: PostService
   ) {
     this.route.paramMap.subscribe((paramMap) => {
       const name = paramMap.get('name');
@@ -76,13 +76,13 @@ export class SharedService {
 
           if (data) {
             this.userData = data;
-            // localStorage.setItem('userData', JSON.stringify(this.userData));
+            localStorage.setItem('userData', JSON.stringify(this.userData));
           }
         },
         error: (error) => {
           this.spinner.hide();
           console.log(error);
-        }
+        },
       });
     }
   }
@@ -103,23 +103,23 @@ export class SharedService {
       },
     });
   }
-  
+
   getAdvertizeMentLink(id): void {
     if (id) {
       this.communityService.getLinkById(id).subscribe({
-        next: ((res: any) => {
+        next: (res: any) => {
           if (res.data) {
-            console.log(res.data)
+            console.log(res.data);
             if (res.data[0]?.link1 || res.data[0]?.link2) {
               this.getMetaDataFromUrlStr(res.data[0]?.link1);
               this.getMetaDataFromUrlStr(res.data[0]?.link2);
             }
           }
-        }),
+        },
         error: (err) => {
           console.log(err);
-        }
-      })
+        },
+      });
     } else {
       this.advertizementLink = null;
     }
