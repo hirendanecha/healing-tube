@@ -55,23 +55,24 @@ export class ResetPasswordComponent {
   }
 
   validatepassword(): boolean {
-    const pattern =
-      '[a-zA-Z0-9]{5,}';
+    const pattern = '[a-zA-Z0-9]{5,}';
     // const pattern =
     //   '(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[a-z])(?=.*[0-9].*[0-9]).{8}';
 
-    if (!this.changePassword.form.controls['newPassword'].value.match(pattern)) {
-      this.msg =
-        'Password must be a minimum of 5 characters';
-        this.type = 'danger'
+    if (
+      !this.changePassword.form.controls['newPassword'].value.match(pattern)
+    ) {
+      this.msg = 'Password must be a minimum of 5 characters';
+      this.type = 'danger';
       // this.msg =
       //   'Password must be a minimum of 8 characters and include one uppercase letter, one lowercase letter, and one special character';
       return false;
     }
-   return true;
+    return true;
   }
 
   forgotPasswordSubmit(form: NgForm) {
+    localStorage.setItem('auth-token', this.userAccessToken);
     this.submitted = true;
     if (form.form.invalid) {
       return;
@@ -82,25 +83,24 @@ export class ResetPasswordComponent {
         token: this.userAccessToken,
         password: this.changePassword.form.controls['confirmPassword'].value,
       })
-      .subscribe(
-        {
-          next: (result) => {
-            this.submitted = false;
-            this.loading = false;
-            this.msg = 'New password set successfully!';
-            this.type = 'success';
-            this.changePassword.reset();
-            setTimeout(() => {
-              this.router.navigate(['/login']);
-            }, 2300);
-          },
-          error:
-            (error) => {
-              this.loading = false;
-              this.submitted = false;
-              this.msg = 'Something went wrong please try again.';
-              this.type = 'danger';
-            }
-        });
+      .subscribe({
+        next: (result) => {
+          this.submitted = false;
+          this.loading = false;
+          this.msg = 'New password set successfully!';
+          this.type = 'success';
+          this.changePassword.reset();
+          // setTimeout(() => {
+          // }, 2300);
+          localStorage.clear();
+          this.router.navigate(['/login']);
+        },
+        error: (error) => {
+          this.loading = false;
+          this.submitted = false;
+          this.msg = 'Something went wrong please try again.';
+          this.type = 'danger';
+        },
+      });
   }
 }
