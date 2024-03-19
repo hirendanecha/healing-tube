@@ -20,6 +20,8 @@ import { UploadFilesService } from 'src/app/@shared/services/upload-files.servic
 import { Router } from '@angular/router';
 import { OpenStripeComponent } from 'src/app/@shared/modals/open-stripe/open-stripe.component';
 import { PaymentService } from 'src/app/@shared/services/payment.service';
+import { ConfirmationModalComponent } from 'src/app/@shared/modals/confirmation-modal/confirmation-modal.component';
+import { AlertModalComponent } from 'src/app/@shared/modals/alert-modal/alert-modal.component';
 
 @Component({
   selector: 'app-add-community-modal',
@@ -58,7 +60,7 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
   selectedValues: number[] = [];
   selectedAreaValues: number[] = [];
 
-  appointmentCards: any = []
+  appointmentCards: any = [];
 
   communityForm = new FormGroup({
     profileId: new FormControl(),
@@ -140,7 +142,7 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
   getAppointmentCards() {
     this.paymentService.getAppointmentCards().subscribe({
       next: (res) => {
-        this.appointmentCards = res.data
+        this.appointmentCards = res.data;
       },
       error: (error) => {
         console.log(error);
@@ -230,27 +232,25 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
       const formData = this.communityForm.value;
       formData['emphasis'] = this.selectedValues;
       formData['areas'] = this.selectedAreaValues;
-      this.communityService
-        .editCommunity(formData, this.data.Id)
-        .subscribe({
-          next: (res: any) => {
-            this.spinner.hide();
-            if (!res.error) {
-              this.submitted = true;
-              // this.createCommunityAdmin(res.data);
-              this.toastService.success(
-                'Your Health Practitioner edit successfully!'
-              );
-              this.activeModal.close('success');
-            }
-          },
-          error: (err) => {
-            this.toastService.danger(
-              'Please change Health Practitioner. this Health Practitioner name already in use.'
+      this.communityService.editCommunity(formData, this.data.Id).subscribe({
+        next: (res: any) => {
+          this.spinner.hide();
+          if (!res.error) {
+            this.submitted = true;
+            // this.createCommunityAdmin(res.data);
+            this.toastService.success(
+              'Your Health Practitioner edit successfully!'
             );
-            this.spinner.hide();
-          },
-        });
+            this.activeModal.close('success');
+          }
+        },
+        error: (err) => {
+          this.toastService.danger(
+            'Please change Health Practitioner. this Health Practitioner name already in use.'
+          );
+          this.spinner.hide();
+        },
+      });
     }
   }
 
@@ -427,26 +427,31 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
 
     if (selectedSlot && !this.pricingPage) {
       this.pricingPage = true;
-    } else if (selectedSlot.selectedCard.length > 0) {
-      const modalRef = this.modalService.open(OpenStripeComponent, {
-        centered: true,
-        backdrop: 'static',
-      });
-      modalRef.componentInstance.title = 'Pay Bill';
-      modalRef.componentInstance.confirmButtonLabel = 'Pay';
-      modalRef.componentInstance.cancelButtonLabel = 'Cancel';
-      modalRef.componentInstance.data = selectedSlot;
-      modalRef.result.then((res) => {
-        this.router.navigate(['/health-practitioner']);
-      });
-    } else {
-      this.toastService.danger('Please select your preference for billing.');
     }
+    this.modalService.open(AlertModalComponent, {
+      centered: true,
+      backdrop: 'static',
+    });
+    //  else if (selectedSlot.selectedCard.length > 0) {
+    //   const modalRef = this.modalService.open(OpenStripeComponent, {
+    //     centered: true,
+    //     backdrop: 'static',
+    //   });
+    //   modalRef.componentInstance.title = 'Pay Bill';
+    //   modalRef.componentInstance.confirmButtonLabel = 'Pay';
+    //   modalRef.componentInstance.cancelButtonLabel = 'Cancel';
+    //   modalRef.componentInstance.data = selectedSlot;
+    //   modalRef.result.then((res) => {
+    //     this.router.navigate(['/health-practitioner']);
+    //   });
+    // } else {
+    //   this.toastService.danger('Please select your preference for billing.');
+    // }
   }
 
   convertToUppercase(event: any) {
     const inputElement = event.target as HTMLInputElement;
-    let inputValue = inputElement.value;   
+    let inputValue = inputElement.value;
     inputValue = inputValue.replace(/\s/g, '');
     inputElement.value = inputValue.toUpperCase();
   }

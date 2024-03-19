@@ -107,6 +107,7 @@ import { EditPostModalComponent } from './modals/edit-post-modal/edit-post-modal
 import { AppointmentModalComponent } from './modals/appointment-modal/appointment-modal.component';
 import { OpenStripeComponent } from './modals/open-stripe/open-stripe.component';
 import { AppointmentCallComponent } from '../layouts/main-layout/pages/appointment-call/appointment-call.component';
+import { AlertModalComponent } from './modals/alert-modal/alert-modal.component';
 
 const sharedComponents = [
   ConfirmationModalComponent,
@@ -135,6 +136,7 @@ const sharedComponents = [
   AppointmentModalComponent,
   OpenStripeComponent,
   AppointmentCallComponent,
+  AlertModalComponent,
 ];
 
 const sharedModules = [
