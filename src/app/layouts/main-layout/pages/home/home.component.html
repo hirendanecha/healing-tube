@@ -514,7 +514,7 @@
                   (click)="createCommunityAdmin(member)"
                 >
                   <fa-icon [icon]="['fas', 'user-check']" />
-                  <span>Make {{ this.communityDetails.pageType }} member</span>
+                  <span>Make {{ this.communityDetails.pageType === "community" ? "Helth-practitioner" : "page" }} member</span>
                 </a>
               </button>
               <button ngbDropdownItem *ngIf="member?.isAdmin === 'N'">
@@ -523,7 +523,7 @@
                   (click)="createCommunityAdmin(member)"
                 >
                   <fa-icon [icon]="['fas', 'user-check']" />
-                  <span>Make {{ this.communityDetails.pageType }} admin</span>
+                  <span>Make {{ this.communityDetails.pageType === "community" ? "Helth-practitioner" : "page" }} admin</span>
                 </a>
               </button>
               <button ngbDropdownItem>

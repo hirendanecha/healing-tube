@@ -553,13 +553,13 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     const modalRef = this.modalService.open(ConfirmationModalComponent, {
       centered: true,
     });
-    modalRef.componentInstance.title = `Leave ${this.communityDetails.pageType}`;
+    modalRef.componentInstance.title = `Leave ${this.communityDetails.pageType === "community" ? "Helth-practitioner" : "page"}`;
     modalRef.componentInstance.confirmButtonLabel = id ? 'Remove' : 'Leave';
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
     if (id) {
-      modalRef.componentInstance.message = `Are you sure want to remove this member from ${this.communityDetails.pageType}?`;
+      modalRef.componentInstance.message = `Are you sure want to remove this member from ${this.communityDetails.pageType === "community" ? "Helth-practitioner" : "page"}?`;
     } else {
-      modalRef.componentInstance.message = `Are you sure want to Leave from this ${this.communityDetails.pageType}?`;
+      modalRef.componentInstance.message = `Are you sure want to Leave from this ${this.communityDetails.pageType === "community" ? "Helth-practitioner" : "page"}?`;
     }
     modalRef.result.then((res) => {
       if (res === 'success') {
@@ -586,10 +586,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     const modalRef = this.modalService.open(ConfirmationModalComponent, {
       centered: true,
     });
-    modalRef.componentInstance.title = `Delete ${this.communityDetails.pageType}`;
+    modalRef.componentInstance.title = `Delete ${this.communityDetails.pageType === "community" ? "Helth-practitioner" : "page"}`;
     modalRef.componentInstance.confirmButtonLabel = 'Delete';
     modalRef.componentInstance.cancelButtonLabel = 'Cancel';
-    modalRef.componentInstance.message = `Are you sure want to delete this ${this.communityDetails.pageType}?`;
+    modalRef.componentInstance.message = `Are you sure want to delete this ${this.communityDetails.pageType === "community" ? "Helth-practitioner" : "page"}?`;
     modalRef.result.then((res) => {
       if (res === 'success') {
         this.communityService

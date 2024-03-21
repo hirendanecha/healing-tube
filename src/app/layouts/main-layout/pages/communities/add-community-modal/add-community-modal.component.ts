@@ -377,8 +377,11 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
   }
 
   clearForm() {
-    this.activeModal.close();
-    this.router.navigate(['/health-practitioner']);
+    if (this.data.Id) {
+      this.activeModal.close();
+    } else {
+      this.router.navigate(['/health-practitioner']);
+    }
   }
 
   isSelected(id: number): boolean {
