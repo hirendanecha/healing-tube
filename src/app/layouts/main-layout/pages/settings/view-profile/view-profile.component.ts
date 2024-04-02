@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit,Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
@@ -22,8 +22,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./view-profile.component.scss'],
 })
 export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
-  customer: any = {};
-  // customer: Customer = new Customer();
+  customer: any = {};// customer: Customer = new Customer();
   customerPostList: any = [];
   userId: number;
   profilePic: any = {};
@@ -76,7 +75,7 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
     this.customerService.getProfile(id).subscribe({
       next: (res: any) => {
         this.spinner.hide();
-        if (res.data) {
+        if (res.data) {  
           this.customer = res.data[0];
           this.userId = res.data[0]?.UserID;
           const data = {
@@ -120,7 +119,7 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   goToCommunityDetails(community: any): void {
-    this.router.navigate(['health-practitioner']);
+    this.router.navigate([`health-practitioner/details/${community?.slug}`]);
   }
 
   openDropDown(id) {
@@ -133,6 +132,8 @@ export class ViewProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   openEditProfile(): void {
     this.router.navigate([`settings/edit-profile/${this.profileId}`]);
+    
+    
   }
 
   ngOnDestroy(): void {
