@@ -17,13 +17,13 @@ const routes: Routes = [
   {
     path: 'health-practitioner/details/:name',
     component: HomeComponent,
-    canActivate: mapToCanActivate([AuthenticationGuard]),
+    // canActivate: mapToCanActivate([AuthenticationGuard]),
    
   },
   {
     path: 'pages/:name',
     component: HomeComponent,
-    canActivate: mapToCanActivate([AuthenticationGuard]),
+    // canActivate: mapToCanActivate([AuthenticationGuard]),
   },
   {
     path: 'post/:id',
