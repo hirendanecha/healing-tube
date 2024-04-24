@@ -60,7 +60,7 @@ export class ResetPasswordComponent {
   }
 
   validatepassword(): boolean {
-    const pattern = '[a-zA-Z0-9]{5,}';
+    const pattern = /^.{5,}$/;
     // const pattern =
     //   '(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[a-z])(?=.*[0-9].*[0-9]).{8}';
 
@@ -103,7 +103,7 @@ export class ResetPasswordComponent {
         error: (error) => {
           this.loading = false;
           this.submitted = false;
-          this.msg = 'Something went wrong please try again.';
+          this.msg = 'You have entered the wrong password or username.';
           this.type = 'danger';
         },
       });
