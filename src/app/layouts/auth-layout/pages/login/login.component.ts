@@ -40,6 +40,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   type = 'danger';
   theme = '';
   captchaToken = '';
+  passwordHidden: boolean = true;
   @ViewChild('captcha', { static: false }) captchaElement: ElementRef;
 
   constructor(
@@ -107,6 +108,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
         }
       },
     });
+  }
+  togglePasswordVisibility(passwordInput: HTMLInputElement) {
+    passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+    this.passwordHidden = !this.passwordHidden;
   }
 
   onSubmit(): void {

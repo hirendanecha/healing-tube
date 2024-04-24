@@ -20,6 +20,7 @@ export class ResetPasswordComponent {
   msg = '';
   type = '';
   userAccessToken: any;
+  passwordHidden: boolean = true;
   constructor(
     private modalService: NgbModal,
     private router: Router,
@@ -34,6 +35,10 @@ export class ResetPasswordComponent {
     });
 
     this.spinner.hide();
+  }
+  togglePasswordVisibility(passwordInput: HTMLInputElement) {
+    passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+    this.passwordHidden = !this.passwordHidden;
   }
 
   mustMatch() {
