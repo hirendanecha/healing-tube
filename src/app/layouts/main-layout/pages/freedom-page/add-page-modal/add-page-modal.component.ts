@@ -59,6 +59,7 @@ export class AddFreedomPageComponent implements OnInit, AfterViewInit {
     link1: null,
     link2: null
   }
+  allStateData: any;
   
   constructor(
     public activeModal: NgbActiveModal,
@@ -347,6 +348,25 @@ export class AddFreedomPageComponent implements OnInit, AfterViewInit {
         this.spinner.hide();
         this.allCountryData = result;
         this.pageForm.get('Zip').enable();
+        this.getAllState(this.defaultCountry)
+      },
+      error: (error) => {
+        this.spinner.hide();
+        console.log(error);
+      },
+    });
+  }
+  onCountryChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    this.getAllState(target.value);
+  }
+  
+  getAllState(selectCountry) {
+    // this.spinner.show();
+    this.customerService.getStateData(selectCountry).subscribe({
+      next: (result) => {
+        this.spinner.hide();
+        this.allStateData = result;
       },
       error: (error) => {
         this.spinner.hide();
