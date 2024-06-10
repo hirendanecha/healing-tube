@@ -82,6 +82,7 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
   pricingPage: boolean;
   totalAmt: number;
   selectedCards: any[] = [];
+  allStateData: any;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -294,6 +295,26 @@ export class AddCommunityModalComponent implements OnInit, AfterViewInit {
         this.spinner.hide();
         this.allCountryData = result;
         this.communityForm.get('Zip').enable();
+        this.getAllState(this.defaultCountry)
+      },
+      error: (error) => {
+        this.spinner.hide();
+        console.log(error);
+      },
+    });
+  }
+
+  onCountryChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    this.getAllState(target.value);
+  }
+  
+  getAllState(selectCountry) {
+    // this.spinner.show();
+    this.customerService.getStateData(selectCountry).subscribe({
+      next: (result) => {
+        this.spinner.hide();
+        this.allStateData = result;
       },
       error: (error) => {
         this.spinner.hide();
