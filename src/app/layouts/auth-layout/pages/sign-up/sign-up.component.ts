@@ -41,6 +41,7 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     url: '',
   };
   passwordHidden: boolean = true;
+  confirmPasswordHidden: boolean = true;
 
   @ViewChild('zipCode') zipCode: ElementRef;
 
@@ -51,12 +52,12 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     Email: new FormControl('', [Validators.required]),
     Password: new FormControl('', [Validators.required]),
     confirm_password: new FormControl('', [Validators.required]),
-    MobileNo: new FormControl('', [Validators.required]),
+    MobileNo: new FormControl(''),
     Country: new FormControl('US', [Validators.required]),
     Zip: new FormControl('', Validators.required),
     State: new FormControl('', Validators.required),
-    City: new FormControl('', Validators.required),
-    County: new FormControl('', Validators.required),
+    City: new FormControl(''),
+    County: new FormControl(''),
     TermAndPolicy: new FormControl(false, Validators.required),
   });
   theme = '';
@@ -97,12 +98,18 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     //     }
     //   });
   }
-  
+
   togglePasswordVisibility(passwordInput: HTMLInputElement) {
-    passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+    passwordInput.type =
+      passwordInput.type === 'password' ? 'text' : 'password';
     this.passwordHidden = !this.passwordHidden;
   }
 
+  toggleConfirmPasswordVisibility(confirmpasswordInput: HTMLInputElement) {
+    confirmpasswordInput.type =
+      confirmpasswordInput.type === 'password' ? 'text' : 'password';
+    this.confirmPasswordHidden = !this.confirmPasswordHidden;
+  }
   selectFiles(event) {
     this.profileImg = event;
   }
@@ -124,9 +131,6 @@ export class SignUpComponent implements OnInit, AfterViewInit {
   }
 
   upload(file: any = {}) {
-    // if (file.size / (1024 * 1024) > 5) {
-    //   return 'Image file size exceeds 5 MB!';
-    // }
     this.spinner.show();
     if (file) {
       this.uploadService.uploadFile(file).subscribe({
@@ -136,10 +140,6 @@ export class SignUpComponent implements OnInit, AfterViewInit {
             this.profilePic = res?.body?.url;
             this.creatProfile(this.registerForm.value);
           }
-          // if (file?.size < 5120000) {
-          // } else {
-          //   this.toastService.warring('Image is too large!');
-          // }
         },
         error: (err) => {
           this.spinner.hide();
@@ -233,30 +233,11 @@ export class SignUpComponent implements OnInit, AfterViewInit {
       if (!this.validatepassword()) {
         return;
       }
-
-      const id = this.route.snapshot.paramMap.get('id');
-      if (this.userId) {
-        // this.updateCustomer();
-      } else {
-        // this.submitted = true;
-        this.save();
-      }
+      this.save();
     } else {
       this.msg = 'Please enter mandatory fields(*) data.';
       this.scrollTop();
-      // return false;
     }
-
-    // if (
-    //  this.registerForm.invalid ||
-    //   this.registerForm.get('termAndPolicy')?.value === false ||
-    //   !this.profileImg?.file?.name
-    // ) {
-    //   this.msg =
-    //     'Please enter mandatory fields(*) data and please check terms and conditions.';
-    //   this.scrollTop();
-    //   return false;
-    // }
   }
 
   changeCountry() {
@@ -287,7 +268,7 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     const target = event.target as HTMLSelectElement;
     this.getAllState(target.value);
   }
-  
+
   getAllState(selectCountry) {
     // this.spinner.show();
     this.customerService.getStateData(selectCountry).subscribe({
@@ -391,12 +372,14 @@ export class SignUpComponent implements OnInit, AfterViewInit {
     });
   }
   onChangeTag(event) {
-    this.registerForm.get('Username').setValue(event.target.value.replaceAll(' ', ''));
+    this.registerForm
+      .get('Username')
+      .setValue(event.target.value.replaceAll(' ', ''));
   }
 
   convertToUppercase(event: any) {
     const inputElement = event.target as HTMLInputElement;
-    let inputValue = inputElement.value;   
+    let inputValue = inputElement.value;
     inputValue = inputValue.replace(/\s/g, '');
     inputElement.value = inputValue.toUpperCase();
   }
