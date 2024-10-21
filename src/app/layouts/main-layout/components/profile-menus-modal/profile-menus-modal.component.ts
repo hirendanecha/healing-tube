@@ -28,8 +28,10 @@ export class ProfileMenusModalComponent {
     private customerService: CustomerService,
     private cookieService: CookieService,
   ) {
-    this.userId = +(this.tokenStorageService.getUser().Id) as any;
-    this.profileId = +localStorage.getItem('profileId');
+    this.sharedService.loggedInUser$.subscribe((data) => {
+      this.userId = data?.Id;
+      this.profileId = data?.profileId;
+    });
   }
 
   closeMenu(e: MouseEvent, type: string) {

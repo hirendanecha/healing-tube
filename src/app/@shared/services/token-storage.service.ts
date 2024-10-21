@@ -58,8 +58,8 @@ export class TokenStorageService {
   }
 
   getCredentials(): any {
-    this._credentials = this.getUser();
-    const isAuthenticate = Object.keys(this._credentials || {}).length > 0;
+    const token = this.getToken();
+    const isAuthenticate = token ? true : false;
     this.changeIsUserAuthenticated(isAuthenticate);
     return isAuthenticate;
   }

@@ -5,6 +5,7 @@ import { CustomerService } from './customer.service';
 import { PostService } from './post.service';
 import { CommunityService } from './community.service';
 import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,10 @@ export class SharedService {
   notificationList: any = [];
   isNotify = false;
   advertizementLink: any = [];
+  
+  private bc = new BroadcastChannel('user_data_channel');
+  loginUserInfo = new BehaviorSubject<any>(null);
+  loggedInUser$ = this.loginUserInfo.asObservable();
 
   constructor(
     public modalService: NgbModal,
@@ -35,6 +40,9 @@ export class SharedService {
     } else {
       this.changeLightUi();
     }
+    this.bc.onmessage = (event) => {
+      this.loginUserInfo.next(event.data);
+    };
   }
 
   changeDarkUi() {
@@ -76,7 +84,9 @@ export class SharedService {
 
           if (data) {
             this.userData = data;
-            localStorage.setItem('userData', JSON.stringify(this.userData));
+            // localStorage.setItem('userData', JSON.stringify(this.userData));
+            this.getLoginUserDetails(data);
+            this.bc.postMessage(data);
           }
         },
         error: (error) => {
@@ -113,11 +123,14 @@ export class SharedService {
       this.communityService.getLinkById(id).subscribe({
         next: (res: any) => {
           if (res.data) {
-            console.log(res.data);
             if (res.data[0]?.link1 || res.data[0]?.link2) {
               this.advertizementLink = [];
-              this.getMetaDataFromUrlStr(res.data[0]?.link1);
-              this.getMetaDataFromUrlStr(res.data[0]?.link2);
+              if (res.data[0]?.link1) {
+                this.getMetaDataFromUrlStr(res.data[0]?.link1);
+              }
+              if (res.data[0]?.link2) {
+                this.getMetaDataFromUrlStr(res.data[0]?.link2);
+              }
             }
           }
         },
@@ -133,22 +146,25 @@ export class SharedService {
   getMetaDataFromUrlStr(url): void {
     this.postService.getMetaData({ url }).subscribe({
       next: (res: any) => {
-        if (res?.meta?.image) {
-          const urls = res.meta?.image?.url;
-          const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
-          const linkMetaData = {
-            title: res?.meta?.title,
-            metadescription: res?.meta?.description,
-            metaimage: imgUrl,
-            metalink: res?.meta?.url || url,
-            url: url,
-          };
-          this.advertizementLink?.push(linkMetaData);
-        }
+        const meta = res?.meta;
+        const urls = meta?.image?.url;
+        const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
+        const linkMetaData = {
+          title: meta?.title,
+          metadescription: meta?.description,
+          metaimage: imgUrl,
+          metalink: meta?.url || url,
+          url: url,
+        };
+        this.advertizementLink?.push(linkMetaData);
       },
       error: (err) => {
         console.log(err);
       },
     });
+  }
+
+  getLoginUserDetails(userData: any = {}) {
+    this.loginUserInfo.next(userData);
   }
 }

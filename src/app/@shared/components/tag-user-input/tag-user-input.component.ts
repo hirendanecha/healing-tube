@@ -15,6 +15,7 @@ import { CustomerService } from '../../services/customer.service';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
 import { PostService } from '../../services/post.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { EmojiPaths } from '../../constant/emoji';
 
 @Component({
   selector: 'app-tag-user-input',
@@ -25,6 +26,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   @Input('value') value: string = '';
   @Input('placeholder') placeholder: string = 'ss';
   @Input('isShowMetaPreview') isShowMetaPreview: boolean = true;
+  @Input('isCopyImagePreview') isCopyImagePreview: boolean = true;
   @Input('isAllowTagUser') isAllowTagUser: boolean = true;
   @Input('isShowMetaLoader') isShowMetaLoader: boolean = true;
   @Input('isShowEmojis') isShowEmojis: boolean = false;
@@ -34,6 +36,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   @ViewChild('tagInputDiv', { static: false }) tagInputDiv: ElementRef;
   @ViewChild('userSearchDropdownRef', { static: false, read: NgbDropdown })
   userSearchNgbDropdown: NgbDropdown;
+  @Input() placement: string = 'bottom-end';
 
   ngUnsubscribe: Subject<void> = new Subject<void>();
   metaDataSubject: Subject<void> = new Subject<void>();
@@ -45,30 +48,8 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
 
   copyImage: any;
 
-  emojiPaths = [
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Heart.gif',
-    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Nerd.gif'
-    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Cry.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Cool.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Anger.gif',
-    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Crazy.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Censorship.gif',
-    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Doctor.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Hug.gif',
-    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/In-Love.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Kiss.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/LOL.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Party.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Poop.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Sad.gif',
-    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Scholar.gif',
-    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Shock.gif',
-    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Sick.gif',
-    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Think.gif',
-    // 'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Sleep.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Thumbs-UP.gif',
-    'https://s3.us-east-1.wasabisys.com/freedom-social/freedom-emojies/Thumbs-down.gif',
-  ];
+  emojiPaths = EmojiPaths;
+  profileId: number;
 
   constructor(
     private renderer: Renderer2,
@@ -76,7 +57,7 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
     private postService: PostService,
     private spinner: NgxSpinnerService
   ) {
-    this.metaDataSubject.pipe(debounceTime(10)).subscribe(() => {
+    this.metaDataSubject.pipe(debounceTime(5)).subscribe(() => {
       this.getMetaDataFromUrlStr();
       this.checkUserTagFlag();
     });
@@ -156,23 +137,22 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
       this.onClearFile();
     }
 
-    const text = htmlText.replace(/<[^>]*>/g, '');
-    // const matches = text.match(/(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z0-9]{2,})?(.*)/gi);
-    // const matches = text.match(/((ftp|http|https):\/\/)?(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/);
-    const matches = text.match(/(?:https?:\/\/|www\.)[^\s]+/g);
-    const url = matches?.[0];
-    // console.log(url, matches);
+    const text = htmlText.replace(/<br\s*\/?>|<[^>]*>/g, ' ');
+    const extractedLinks = [...htmlText.matchAll(/<a\s+(?![^>]*\bdata-id=["'][^"']*["'])[^>]*?href=["']([^"']*)["']/gi)]
+    .map(match => match[1]);
+    const matches = text.match(/(?:https?:\/\/|www\.)[^\s<&]+(?:\.[^\s<&]+)+(?:\.[^\s<]+)?/g);
+    const url = matches?.[0] || extractedLinks?.[0];
     if (url) {
       if (url !== this.metaData?.url) {
         // this.spinner.show();
-        this.isMetaLoader = true;
-        this.ngUnsubscribe.next();
+        const unsubscribe$ = new Subject<void>();
         this.postService
           .getMetaData({ url })
-          .pipe(takeUntil(this.ngUnsubscribe))
+          .pipe(takeUntil(unsubscribe$))
           .subscribe({
             next: (res: any) => {
               this.isMetaLoader = false;
+              this.spinner.hide();
               if (res?.meta?.image) {
                 const urls = res.meta?.image?.url;
                 const imgUrl = Array.isArray(urls) ? urls?.[0] : urls;
@@ -199,14 +179,19 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
               } else {
                 this.metaData.metalink = url;
               }
-
               this.spinner.hide();
             },
             error: () => {
-              this.metaData.metalink = url
+              if (this.metaData.metalink === null || '') {
+                this.metaData.metalink = url;
+              }
               this.isMetaLoader = false;
               // this.clearMetaData();
               this.spinner.hide();
+            },
+            complete: () => {
+              unsubscribe$.next();
+              unsubscribe$.complete();
             },
           });
       }
@@ -233,15 +218,32 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
 
   selectTagUser(user: any): void {
     const htmlText = this.tagInputDiv?.nativeElement?.innerHTML || '';
-    const text = htmlText.replace(
-      `@${this.userNameSearch}`,
-      `<a href="/settings/view-profile/${
-        user?.Id
-      }" class="text-danger" data-id="${user?.Id}">@${user?.Username.split(
-        ' '
-      ).join('')}</a>`
-    );
-    console.log(text);
+    const replaceUsernamesInTextNodes = (html: string, userName: string, userId: string, displayName: string) => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const walk = (node: Node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          const regex = /@(\w*)/g;
+          const replacement = `<a href="/settings/view-profile/${userId}" class="text-danger" data-id="${userId}">@${displayName}</a>`;
+          let replacedText = node.nodeValue?.replace(regex, replacement);
+          const textRegex = new RegExp(`(?<=<\/a>)${userName}`, 'g');
+          replacedText = replacedText?.replace(textRegex, '');
+          if (replacedText !== node.nodeValue) {
+            const span = document.createElement('span');
+            span.innerHTML = replacedText!;
+            while (span.firstChild) {
+              node.parentNode?.insertBefore(span.firstChild, node);
+            }
+            node.parentNode?.removeChild(node);
+          }
+        } else if (node.nodeType === Node.ELEMENT_NODE && node.nodeName.toLowerCase() !== 'a') {
+          node.childNodes.forEach(child => walk(child));
+        }
+      };
+      doc.body.childNodes.forEach(child => walk(child));
+      return doc.body.innerHTML;
+    };
+    const text = replaceUsernamesInTextNodes(htmlText, this.userNameSearch, user?.Id, user?.Username.split(' ').join(''));
     this.setTagInputDivValue(text);
     this.emitChangeEvent();
     this.moveCursorToEnd();
@@ -255,20 +257,19 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   }
 
   getUserList(search: string): void {
-    this.customerService.getProfileList(search).subscribe({
-      next: (res: any) => {
-        if (res?.data?.length > 0) {
-          this.userList = res.data.map((e) => e);
-          console.log(this.userList);
-          // this.userSearchNgbDropdown.open();
-        } else {
+      this.customerService.getProfileList(search).subscribe({
+        next: (res: any) => {
+          if (res?.data?.length > 0) {
+            this.userList = res.data.map((e) => e);
+            // this.userSearchNgbDropdown.open();
+          } else {
+            this.clearUserSearchData();
+          }
+        },
+        error: () => {
           this.clearUserSearchData();
-        }
-      },
-      error: () => {
-        this.clearUserSearchData();
-      },
-    });
+        },
+      });
   }
 
   clearUserSearchData(): void {
@@ -295,12 +296,10 @@ export class TagUserInputComponent implements OnChanges, OnDestroy {
   emitChangeEvent(): void {
     if (this.tagInputDiv) {
       const htmlText = this.tagInputDiv?.nativeElement?.innerHTML;
-
-      // this.value = `${htmlText}`.replace(/\<div\>\<br\>\<\/div\>/gi, '');
-      this.value = `${htmlText}`.replace(/(?:<div><br><\/div>\s*)+/gi, '<div><br></div>');
-      // this.moveCursorToEnd();
-      // console.log('htmlText', `${htmlText}`.replace(/\<div\>\<br\>\<\/div\>/ig, ''))
-      // console.log('htmlText', this.value);
+      this.value = `${htmlText}`.replace(/<br[^>]*>\s*/gi, '<br>')
+      .replace(/(<br\s*\/?>\s*){2,}/gi, '<br>')
+      .replace(/(?:<div><br><\/div>\s*)+/gi,'<div><br></div>'
+      ).replace( /<a\s+(?![^>]*\bdata-id=["'][^"']*["'])[^>]*>(.*?)<\/a>/gi,'$1');
       this.onDataChange?.emit({
         html: this.value,
         tags: this.tagInputDiv?.nativeElement?.children,

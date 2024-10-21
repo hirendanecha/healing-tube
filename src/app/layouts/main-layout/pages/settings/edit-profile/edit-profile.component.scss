@@ -34,4 +34,10 @@
       }
     }
   }
+
+ ::ng-deep .form-check-input{
+    width: 50px;
+    padding: 14px;
+    cursor: pointer;
+  }
 }

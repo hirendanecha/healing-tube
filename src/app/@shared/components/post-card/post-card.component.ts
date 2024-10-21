@@ -29,6 +29,7 @@ import { SeoService } from '../../services/seo.service';
 import { BreakpointService } from '../../services/breakpoint.service';
 import { EditResearchModalComponent } from '../../modals/edit-research-modal/edit-research-modal.component';
 import { SharePostModalComponent } from '../../modals/share-post-modal/share-post-modal.component';
+import { EmojiPaths } from '../../constant/emoji';
 
 declare var jwplayer: any;
 @Component({
@@ -52,8 +53,10 @@ export class PostCardComponent implements OnInit {
   commentList: any = [];
   replyCommentList: any = [];
   isReply = false;
+  parentReplayComment: boolean = false;
 
   commentId = null;
+  commentparentReplayId = null;
   commentData: any = {
     file: null,
     url: '',
@@ -69,6 +72,7 @@ export class PostCardComponent implements OnInit {
   tubeUrl = environment.tubeUrl;
   player: any;
   isExpand = false;
+  showFullDesc: boolean = false;
   commentCount = 0;
   commentMessageInputValue: string = '';
   replaycommentMessageInputValue: string = '';
@@ -81,6 +85,7 @@ export class PostCardComponent implements OnInit {
   replayCommentDescriptionimageUrl: string;
   shareButton = false;
   isViewProfile = false;
+  emojiPaths = EmojiPaths;
 
   constructor(
     private seeFirstUserService: SeeFirstUserService,
@@ -101,8 +106,10 @@ export class PostCardComponent implements OnInit {
   ) {
     this.profileId = localStorage.getItem('profileId');
     afterNextRender(() => {
-
-      if (this.post?.id && this.post?.posttype === 'V' || this.post?.posttype === 'R') {
+      if (
+        (this.post?.id && this.post?.posttype === 'V') ||
+        this.post?.posttype === 'R'
+      ) {
         this.playVideo(this.post?.id);
       }
       this.socketListner();
@@ -122,15 +129,15 @@ export class PostCardComponent implements OnInit {
   ngOnInit(): void {
     // this.socketListner();
     this.viewComments(this.post?.id);
+    this.descriptionimageUrl = this.extractImageUrlFromContent(
+      this.post.postdescription
+    );
   }
 
   ngAfterViewInit(): void {
     // if (this.post?.posttype === 'V') {
     //   this.playVideo(this.post?.id);
     // }
-    this.descriptionimageUrl = this.extractImageUrlFromContent(
-      this.post.postdescription
-    );
     const path = this.route.snapshot.routeConfig.path;
     if (path === 'view-profile/:id' || path === 'post/:id') {
       this.shareButton = true;
@@ -166,7 +173,6 @@ export class PostCardComponent implements OnInit {
     this.seeFirstUserService.remove(Number(this.profileId), id).subscribe({
       next: (res) => {
         this.seeFirstList.pop(id);
-        console.log(this.seeFirstList);
         this.toastService.warring('See First Stopped');
         this.getPostList?.emit();
       },
@@ -198,6 +204,9 @@ export class PostCardComponent implements OnInit {
           });
       }
     });
+  }
+  showFullDescription() {
+    this.showFullDesc = !this.showFullDesc;
   }
 
   unsubscribe(post: any): void {
@@ -283,7 +292,6 @@ export class PostCardComponent implements OnInit {
         this.isParent = true;
       }
     }
-    console.log(comment);
   }
 
   deletePost(post): void {
@@ -298,12 +306,6 @@ export class PostCardComponent implements OnInit {
       'Are you sure want to delete this post?';
     modalRef.result.then((res) => {
       if (res === 'success') {
-        // this.socketService.deletePost({ id: post?.id }, data => {
-        //   console.log('post-data', data)
-        // });
-        // this.getPostList.emit();
-        // this.toastService.success('Post deleted successfully');
-        // post['hide'] = true;
         this.postService.deletePost(post.id).subscribe({
           next: (res: any) => {
             if (res) {
@@ -352,7 +354,6 @@ export class PostCardComponent implements OnInit {
 
   likeDisLikePost(data): void {
     this.socketService.likeFeedPost(data, (res) => {
-      console.log('likeOrDislike', res);
       return;
     });
   }
@@ -373,8 +374,6 @@ export class PostCardComponent implements OnInit {
             res.data.commmentsList.filter((ele: any) => {
               ele.descImg = this.extractImageUrlFromContent(ele.comment);
             });
-
-            // console.log(res.data.commmentsList);
             this.commentList = res.data.commmentsList.map((ele: any) => ({
               ...ele,
               replyCommnetsList: res.data.replyCommnetsList.filter(
@@ -428,11 +427,30 @@ export class PostCardComponent implements OnInit {
     });
   }
 
-  showReplySection(id) {
-    this.isReply = this.commentId == id ? false : true;
-    this.commentId = id;
-    if (!this.isReply) {
-      this.commentId = null;
+  showReplySection(commentType, comment) {
+    if (commentType === 'reply') {
+      this.isReply = this.commentId == comment.id ? false : true;
+      this.commentId = comment.id;
+      if (!this.isReply) {
+        this.commentId = null;
+      } else {
+        this.commentparentReplayId = null;
+        setTimeout(() => {
+          this.focusTagInput(comment.id);
+        }, 10);
+      }
+    } else if (commentType === 'parentReplay') {
+      this.parentReplayComment =
+        this.commentparentReplayId == comment.id ? false : true;
+      this.commentparentReplayId = comment.id;
+      if (!this.parentReplayComment) {
+        this.commentparentReplayId = null;
+      } else {
+        this.commentId = null;
+        setTimeout(() => {
+          this.focusTagInput(comment.parentCommentId);
+        }, 10);
+      }
     }
   }
 
@@ -475,7 +493,6 @@ export class PostCardComponent implements OnInit {
 
   commentOnPost(postId, commentId = null): void {
     this.commentData.tags = getTagUsersFromAnchorTags(this.commentMessageTags);
-    console.log(this.commentData);
     if (this.isPostComment === false) {
       if (this.commentData.comment || this.commentData?.file?.name) {
         this.isPostComment = true;
@@ -537,6 +554,7 @@ export class PostCardComponent implements OnInit {
       }, 100);
       this.commentData = {};
       this.isReply = false;
+      this.parentReplayComment = false;
       this.viewComments(this.post?.id);
     }
     //  else {
@@ -550,13 +568,14 @@ export class PostCardComponent implements OnInit {
     // }
   }
 
-  onPostFileSelect(event: any, type: string): void {
+  onPostFileSelect(event: any, type: string, postId: number, commentId?: number): void {
     if (type === 'parent') {
       this.isParent = true;
     } else {
       this.isParent = false;
     }
     const file = event.target?.files?.[0] || {};
+    this.focusTagInput(commentId || postId);
     if (file.type.includes('image/')) {
       this.commentData['file'] = file;
       this.commentData['imageUrl'] = URL.createObjectURL(file);
@@ -574,7 +593,7 @@ export class PostCardComponent implements OnInit {
     this.commentData['imageUrl'] = '';
   }
 
-  playVideo(id: any) {
+  async playVideo(id: any) {
     if (this.player) {
       this.player.remove();
     }
@@ -583,7 +602,7 @@ export class PostCardComponent implements OnInit {
       image: this.post?.thumbfilename,
       mute: false,
       autostart: false,
-      volume: 30,
+      volume: 80,
       height: '300px',
       width: 'auto',
       pipIcon: 'disabled',
@@ -595,27 +614,36 @@ export class PostCardComponent implements OnInit {
       },
       controls: true,
     };
-    if (id) {
-      const jwPlayer = jwplayer('jwVideo-' + id);
-      if (jwPlayer) {
-        this.player = jwPlayer?.setup({
-          ...config,
-        });
-        this.player?.load();
+    const elementId = 'jwVideo-' + id;
+    const videoElement = document.getElementById(elementId);
+
+    if (!videoElement) {
+      console.error(`Element with id ${elementId} not found in the DOM`);
+      return;
+    }
+
+    try {
+      const jwPlayerInstance = jwplayer(elementId);
+      if (jwPlayerInstance && typeof jwPlayerInstance.setup === 'function') {
+        this.player = jwPlayerInstance.setup(config);
+        this.player.load();
+      } else {
+        console.error(
+          'jwplayer instance is not initialized or setup is not a function.'
+        );
       }
+    } catch (error) {
+      console.error('Error initializing JW Player:', error);
     }
   }
 
-  onTagUserInputChangeEvent(data: any): void {
-    // this.commentData.comment = data?.html;
-    this.extractLargeImageFromContent(data.html);
+  onTagUserInputChangeEvent(data: any, postId, commentId?: number): void {
+    this.extractLargeImageFromContent(data.html, postId, commentId);
     this.commentData.meta = data?.meta;
     this.commentMessageTags = data?.tags;
-    // console.log(this.commentData)
   }
-  onTagUserReplayInputChangeEvent(data: any): void {
-    // this.commentData.comment = data?.html;
-    this.extractLargeImageFromContent(data.html);
+  onTagUserReplayInputChangeEvent(data: any, postId, commentId?: number): void {
+    this.extractLargeImageFromContent(data.html, postId, commentId);
     this.commentData.meta = data?.meta;
     this.commentMessageTags = data?.tags;
   }
@@ -630,14 +658,8 @@ export class PostCardComponent implements OnInit {
     });
 
     this.socketService.socket?.on('likeOrDislikeComments', (res) => {
-      // console.log('likeOrDislikeComments', res);
       if (res[0]) {
         if (res[0].parentCommentId) {
-          // let index = this.commentList.findIndex(obj => obj.id === res[0].parentCommentId);
-          // let index1 = this.commentList.findIndex(obj => obj.replyCommnetsList.findIndex(ele => ele.id === res[0].id));
-          // if (index1 !== -1 && index !== -1) {
-          //   this.commentList[index].replyCommnetsList[index1].likeCount = res[0]?.likeCount;
-          // }
           this.commentList.map((ele: any) =>
             res.filter((ele1) => {
               if (ele.id === ele1.parentCommentId) {
@@ -669,7 +691,6 @@ export class PostCardComponent implements OnInit {
 
     this.socketService.socket?.on('comments-on-post', (data: any) => {
       this.isPostComment = false;
-      console.log('comments-on-post', data);
       if (data[0]?.parentCommentId) {
         this.commentList.map((ele: any) =>
           data.filter((ele1) => {
@@ -738,13 +759,12 @@ export class PostCardComponent implements OnInit {
     return null;
   }
 
-  selectedEmoji(emoji) {
-    this.commentMessageInputValue =
-      this.commentMessageInputValue +
-      `<img src=${emoji} width="60" height="60">`;
+  selectedEmoji(emoji, post) {
+    this.commentData.comment = `<img src=${emoji} width="50" height="50">`;
+    this.commentOnPost(post);
   }
 
-  extractLargeImageFromContent(content: string): void {
+  extractLargeImageFromContent(content: string, postId, commentId): void {
     const contentContainer = document.createElement('div');
     contentContainer.innerHTML = content;
     const imgTag = contentContainer.querySelector('img');
@@ -757,37 +777,61 @@ export class PostCardComponent implements OnInit {
         .toLowerCase()
         .endsWith('.gif');
       if (!imgTitle && !imgStyle && !imageGif) {
+        this.focusTagInput(commentId || postId);
         const copyImage = imgTag.getAttribute('src');
-        const bytes = copyImage.length;
-        const megabytes = bytes / (1024 * 1024);
-        if (megabytes > 1) {
-          let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">'
-          this.commentData.comment = `<div>${content.replace(copyImage, '').replace(/\<br\>/ig, '').replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
-          // this.commentData.comment = content.replace(copyImage, '');
-          const base64Image = copyImage
-            .trim()
-            .replace(/^data:image\/\w+;base64,/, '');
-          try {
-            const binaryString = window.atob(base64Image);
-            const uint8Array = new Uint8Array(binaryString.length);
-            for (let i = 0; i < binaryString.length; i++) {
-              uint8Array[i] = binaryString.charCodeAt(i);
-            }
-            const blob = new Blob([uint8Array], { type: 'image/jpeg' });
-            const fileName = `copyImage-${new Date().getTime()}.jpg`;
-            const file = new File([blob], fileName, { type: 'image/jpeg' });
-            this.commentData['file'] = file;
-          } catch (error) {
-            console.error('Base64 decoding error:', error);
+        // this.commentData.comment = content.replace(copyImage, '');
+        let copyImageTag = '<img\\s*src\\s*=\\s*""\\s*alt\\s*="">';
+        this.commentData.comment = `<div>${content
+          .replace(copyImage, '')
+          .replace(/\<br\>/gi, '')
+          .replace(new RegExp(copyImageTag, 'g'), '')}</div>`;
+        const base64Image = copyImage
+          .trim()
+          .replace(/^data:image\/\w+;base64,/, '');
+        try {
+          const binaryString = window.atob(base64Image);
+          const uint8Array = new Uint8Array(binaryString.length);
+          for (let i = 0; i < binaryString.length; i++) {
+            uint8Array[i] = binaryString.charCodeAt(i);
           }
-        } else {
-          this.commentData.comment = content;
+          const blob = new Blob([uint8Array], { type: 'image/jpeg' });
+          const fileName = `copyImage-${new Date().getTime()}.jpg`;
+          const file = new File([blob], fileName, { type: 'image/jpeg' });
+          this.commentData['file'] = file;
+        } catch (error) {
+          console.error('Base64 decoding error:', error);
         }
       } else {
         this.commentData.comment = content;
       }
     } else {
       this.commentData.comment = content;
+    }
+  }
+
+  focusTagInput(postId: number) {
+    const tagUserInput =
+      (document.querySelector(
+        `#replaycomment-${postId} .tag-input-div`
+      ) as HTMLInputElement) ||
+      (document.querySelector(
+        `#comment-${postId} .tag-input-div`
+      ) as HTMLInputElement);
+    if (tagUserInput) {
+      tagUserInput.focus();
+      if (tagUserInput.innerHTML.length) {
+        setTimeout(() => {
+          tagUserInput.innerText = tagUserInput.innerText + ' '.slice(0, -1);
+          const range = document.createRange();
+          const selection = window.getSelection();
+          if (selection) {
+            range.selectNodeContents(tagUserInput);
+            range.collapse(false);
+            selection.removeAllRanges();
+            selection.addRange(range);
+          }
+        }, 100);
+      }
     }
   }
 }

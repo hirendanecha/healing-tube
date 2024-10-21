@@ -83,6 +83,7 @@ import {
   faRefresh,
   faEyeSlash,
   faSquarePlus,
+  faCopy,
 } from '@fortawesome/free-solid-svg-icons';
 import { ClaimTokenModalComponent } from './modals/clai-1776-token-modal/claim-token-modal.component';
 import { WalletLinkComponent } from './modals/wallet-download-modal/1776-wallet.component';
@@ -112,6 +113,7 @@ import { OpenStripeComponent } from './modals/open-stripe/open-stripe.component'
 import { AppointmentCallComponent } from '../layouts/main-layout/pages/appointment-call/appointment-call.component';
 import { AlertModalComponent } from './modals/alert-modal/alert-modal.component';
 import { ConferenceLinkComponent } from './modals/create-conference-link/conference-link-modal.component';
+import { ImgLayoutComponent } from './components/img-layout/img-layout.component';
 
 const sharedComponents = [
   ConfirmationModalComponent,
@@ -141,6 +143,7 @@ const sharedComponents = [
   OpenStripeComponent,
   AppointmentCallComponent,
   AlertModalComponent,
+  ImgLayoutComponent,
   ConferenceLinkComponent
 ];
 
@@ -236,7 +239,8 @@ export class SharedModule {
       faPhone,
       faRefresh,
       faEyeSlash,
-      faSquarePlus
+      faSquarePlus,
+      faCopy
     );
   }
 }

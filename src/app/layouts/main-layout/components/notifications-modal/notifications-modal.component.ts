@@ -8,7 +8,7 @@ import { SocketService } from 'src/app/@shared/services/socket.service';
 @Component({
   selector: 'app-notifications-modal',
   templateUrl: './notifications-modal.component.html',
-  styleUrls: ['./notifications-modal.component.scss'],  
+  styleUrls: ['./notifications-modal.component.scss'],
 })
 export class NotificationsModalComponent implements AfterViewInit {
   originalFavicon: HTMLLinkElement;
